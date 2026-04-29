@@ -1,0 +1,47 @@
+name: tourist_app
+description: "Ứng dụng nhận dạng địa điểm du lịch Việt Nam"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  # 🌐 API + xử lý ảnh
+  http: ^1.2.1
+  image_picker: ^1.0.7
+  video_player: ^2.8.2
+
+  # 🔥 FIREBASE
+  firebase_core: ^2.27.0
+  firebase_auth: ^4.17.4
+  cloud_firestore: ^4.15.4
+  shared_preferences: ^2.5.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.13.1
+
+# 🔥 CẤU HÌNH ICON (PHẢI ĐẶT Ở ĐÂY)
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/logoapp.png"
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/data/labels.json
+    - assets/data/locations.json
+    - assets/data/predict_success_example.json
+    - assets/videos/
+    - assets/images/

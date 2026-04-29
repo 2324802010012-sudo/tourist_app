@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "964453834596",
+    "project_id": "vietlens-app",
+    "storage_bucket": "vietlens-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:964453834596:android:bba0295cce29be7f1d6471",
+        "android_client_info": {
+          "package_name": "com.example.tourist_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3JghH8A85fbhkNq55edhJUq-fEqXsPZc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

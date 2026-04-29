@@ -1,0 +1,261 @@
+[
+  {
+    "id": 1,
+    "predicted_label": "ho_guom",
+    "location_name": "Hồ Gươm",
+    "province": "Hà Nội",
+    "address": "Quận Hoàn Kiếm, Hà Nội",
+    "description": "Hồ Gươm là biểu tượng nổi tiếng của thủ đô Hà Nội, gắn với Tháp Rùa và không gian văn hóa lịch sử lâu đời.",
+    "opening_hours": "Cả ngày",
+    "ticket_price": "Miễn phí",
+    "highlights": [
+      "Tháp Rùa",
+      "Phố đi bộ",
+      "Không gian trung tâm Hà Nội"
+    ],
+    "video_url": "videos/ho_guom.mp4",
+    "thumbnail_url": "images/ho_guom.jpg",
+    "related_locations": [
+      "van_mieu",
+      "lang_bac"
+    ]
+  },
+  {
+    "id": 2,
+    "predicted_label": "van_mieu",
+    "location_name": "Văn Miếu",
+    "province": "Hà Nội",
+    "address": "Quận Đống Đa, Hà Nội",
+    "description": "Văn Miếu - Quốc Tử Giám là quần thể di tích lịch sử, văn hóa tiêu biểu, được xem là trường đại học đầu tiên của Việt Nam.",
+    "opening_hours": "Theo giờ tham quan",
+    "ticket_price": "Có thu phí",
+    "highlights": [
+      "Quốc Tử Giám",
+      "Bia tiến sĩ",
+      "Kiến trúc cổ kính"
+    ],
+    "video_url": "videos/van_mieu.mp4",
+    "thumbnail_url": "images/van_mieu.jpg",
+    "related_locations": [
+      "ho_guom",
+      "lang_bac"
+    ]
+  },
+  {
+    "id": 3,
+    "predicted_label": "lang_bac",
+    "location_name": "Lăng Bác",
+    "province": "Hà Nội",
+    "address": "Quảng trường Ba Đình, Hà Nội",
+    "description": "Lăng Bác là nơi an nghỉ của Chủ tịch Hồ Chí Minh, đồng thời là địa điểm lịch sử và chính trị đặc biệt quan trọng.",
+    "opening_hours": "Theo khung giờ tham quan",
+    "ticket_price": "Miễn phí hoặc theo quy định tham quan",
+    "highlights": [
+      "Quảng trường Ba Đình",
+      "Phủ Chủ tịch",
+      "Giá trị lịch sử"
+    ],
+    "video_url": "videos/lang_bac.mp4",
+    "thumbnail_url": "images/lang_bac.jpg",
+    "related_locations": [
+      "ho_guom",
+      "van_mieu"
+    ]
+  },
+  {
+    "id": 4,
+    "predicted_label": "vinh_ha_long",
+    "location_name": "Vịnh Hạ Long",
+    "province": "Quảng Ninh",
+    "address": "Thành phố Hạ Long, Quảng Ninh",
+    "description": "Vịnh Hạ Long là di sản thiên nhiên nổi tiếng với hàng nghìn đảo đá vôi và cảnh quan biển đặc sắc.",
+    "opening_hours": "Theo tuyến tham quan",
+    "ticket_price": "Có thu phí",
+    "highlights": [
+      "Di sản thiên nhiên",
+      "Đảo đá vôi",
+      "Du thuyền tham quan"
+    ],
+    "video_url": "videos/vinh_ha_long.mp4",
+    "thumbnail_url": "images/vinh_ha_long.jpg",
+    "related_locations": [
+      "trang_an",
+      "ba_na_hills"
+    ]
+  },
+  {
+    "id": 5,
+    "predicted_label": "trang_an",
+    "location_name": "Tràng An",
+    "province": "Ninh Bình",
+    "address": "Huyện Hoa Lư, Ninh Bình",
+    "description": "Tràng An nổi bật với hệ thống núi đá vôi, hang động và các tuyến du lịch sinh thái bằng thuyền.",
+    "opening_hours": "Theo giờ tham quan",
+    "ticket_price": "Có thu phí",
+    "highlights": [
+      "Du lịch sinh thái",
+      "Hang động",
+      "Đi thuyền ngắm cảnh"
+    ],
+    "video_url": "videos/trang_an.mp4",
+    "thumbnail_url": "images/trang_an.jpg",
+    "related_locations": [
+      "vinh_ha_long",
+      "pho_co_hoi_an"
+    ]
+  },
+  {
+    "id": 6,
+    "predicted_label": "pho_co_hoi_an",
+    "location_name": "Phố cổ Hội An",
+    "province": "Quảng Nam",
+    "address": "Thành phố Hội An, Quảng Nam",
+    "description": "Phố cổ Hội An là điểm đến nổi bật với kiến trúc cổ, đèn lồng và không gian văn hóa truyền thống đặc sắc.",
+    "opening_hours": "Cả ngày hoặc theo khu vực tham quan",
+    "ticket_price": "Có khu vực thu phí",
+    "highlights": [
+      "Đèn lồng",
+      "Kiến trúc cổ",
+      "Ẩm thực địa phương"
+    ],
+    "video_url": "videos/pho_co_hoi_an.mp4",
+    "thumbnail_url": "images/pho_co_hoi_an.jpg",
+    "related_locations": [
+      "ba_na_hills",
+      "cau_vang"
+    ]
+  },
+  {
+    "id": 7,
+    "predicted_label": "ba_na_hills",
+    "location_name": "Bà Nà Hills",
+    "province": "Đà Nẵng",
+    "address": "Huyện Hòa Vang, Đà Nẵng",
+    "description": "Bà Nà Hills là khu du lịch nổi tiếng với cáp treo, làng Pháp và nhiều công trình tham quan trên núi.",
+    "opening_hours": "8:00 - 22:00",
+    "ticket_price": "550.000-1200.000đ",
+    "highlights": [
+      "Cáp treo",
+      "Làng Pháp",
+      "Khu vui chơi trên núi"
+    ],
+    "video_url": "videos/ba_na_hills.mp4",
+    "thumbnail_url": "images/ba_na_hills.jpg",
+    "related_locations": [
+      "cau_vang",
+      "pho_co_hoi_an"
+    ]
+  },
+  {
+    "id": 8,
+    "predicted_label": "cau_vang",
+    "location_name": "Cầu Vàng",
+    "province": "Đà Nẵng",
+    "address": "Khu du lịch Bà Nà Hills, Đà Nẵng",
+    "description": "Cầu Vàng là công trình nổi bật với thiết kế độc đáo được nâng đỡ bởi đôi bàn tay khổng lồ giữa không gian núi cao.",
+    "opening_hours": "8:00 - 18:30",
+    "ticket_price": "350.000-450.000đ",
+    "highlights": [
+      "Thiết kế biểu tượng",
+      "Check-in nổi tiếng",
+      "Khung cảnh trên cao"
+    ],
+    "video_url": "videos/cau_vang.mp4",
+    "thumbnail_url": "images/cau_vang.jpg",
+    "gallery": [
+       "images/cau_vang1.jpg",
+       "images/cau_vang2.jpg",
+       "images/cau_vang3.jpg",
+       "images/cau_vang4.jpg",
+       "images/cau_vang5.jpg"
+    ],
+    "related_locations": [
+      "ba_na_hills",
+      "pho_co_hoi_an"
+    ]
+  },
+  {
+    "id": 9,
+    "predicted_label": "cho_ben_thanh",
+    "location_name": "Chợ Bến Thành",
+    "province": "TP. Hồ Chí Minh",
+    "address": "Quận 1, TP. Hồ Chí Minh",
+    "description": "Chợ Bến Thành là một trong những biểu tượng lâu đời của TP. Hồ Chí Minh, nổi bật với kiến trúc đặc trưng và hoạt động mua bán sôi động.",
+    "opening_hours": "Theo giờ hoạt động chợ",
+    "ticket_price": "Miễn phí vào cổng",
+    "highlights": [
+      "Biểu tượng thành phố",
+      "Ẩm thực",
+      "Mua sắm"
+    ],
+    "video_url": "videos/cho_ben_thanh.mp4",
+    "thumbnail_url": "images/cho_ben_thanh.jpg",
+    "related_locations": [
+      "nha_tho_duc_ba",
+      "dinh_doc_lap"
+    ]
+  },
+  {
+    "id": 10,
+    "predicted_label": "nha_tho_duc_ba",
+    "location_name": "Nhà thờ Đức Bà Sài Gòn",
+    "province": "TP. Hồ Chí Minh",
+    "address": "Quận 1, TP. Hồ Chí Minh",
+    "description": "Nhà thờ Đức Bà Sài Gòn là công trình kiến trúc tôn giáo nổi bật mang phong cách châu Âu, nằm ở trung tâm thành phố.",
+    "opening_hours": "Theo thời gian tham quan và sinh hoạt tôn giáo",
+    "ticket_price": "Miễn phí hoặc theo quy định khu vực tham quan",
+    "highlights": [
+      "Kiến trúc cổ điển",
+      "Vị trí trung tâm",
+      "Điểm check-in nổi tiếng"
+    ],
+    "video_url": "videos/nha_tho_duc_ba.mp4",
+    "thumbnail_url": "images/nha_tho_duc_ba.jpg",
+    "related_locations": [
+      "cho_ben_thanh",
+      "dinh_doc_lap"
+    ]
+  },
+  {
+    "id": 11,
+    "predicted_label": "dinh_doc_lap",
+    "location_name": "Dinh Độc Lập",
+    "province": "TP. Hồ Chí Minh",
+    "address": "Quận 1, TP. Hồ Chí Minh",
+    "description": "Dinh Độc Lập là di tích lịch sử quan trọng, gắn liền với nhiều dấu mốc lớn trong lịch sử Việt Nam hiện đại.",
+    "opening_hours": "Theo giờ tham quan",
+    "ticket_price": "Có thu phí",
+    "highlights": [
+      "Giá trị lịch sử",
+      "Kiến trúc đặc trưng",
+      "Không gian trưng bày"
+    ],
+    "video_url": "videos/dinh_doc_lap.mp4",
+    "thumbnail_url": "images/dinh_doc_lap.jpg",
+    "related_locations": [
+      "nha_tho_duc_ba",
+      "cho_ben_thanh"
+    ]
+  },
+  {
+    "id": 12,
+    "predicted_label": "landmark_81",
+    "location_name": "Landmark 81",
+    "province": "TP. Hồ Chí Minh",
+    "address": "Quận Bình Thạnh, TP. Hồ Chí Minh",
+    "description": "Landmark 81 là tòa nhà cao tầng nổi bật, đại diện cho hình ảnh hiện đại và phát triển của TP. Hồ Chí Minh.",
+    "opening_hours": "Theo khu vực dịch vụ",
+    "ticket_price": "Tùy khu vực tham quan",
+    "highlights": [
+      "Tòa nhà biểu tượng",
+      "Không gian hiện đại",
+      "Ngắm cảnh thành phố"
+    ],
+    "video_url": "videos/landmark_81.mp4",
+    "thumbnail_url": "images/landmark_81.jpg",
+    "related_locations": [
+      "cho_ben_thanh",
+      "dinh_doc_lap"
+    ]
+  }
+]
