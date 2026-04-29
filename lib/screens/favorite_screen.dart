@@ -5,6 +5,8 @@ import '../models/location_model.dart';
 import 'detail_screen.dart';
 
 class FavoriteScreen extends StatefulWidget {
+  const FavoriteScreen({super.key});
+
   @override
   _FavoriteScreenState createState() => _FavoriteScreenState();
 }

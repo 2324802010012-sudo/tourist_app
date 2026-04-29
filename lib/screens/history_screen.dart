@@ -4,6 +4,8 @@ import 'detail_screen.dart';
 import '../models/location_model.dart';
 
 class HistoryScreen extends StatefulWidget {
+  const HistoryScreen({super.key});
+
   @override
   _HistoryScreenState createState() => _HistoryScreenState();
 }

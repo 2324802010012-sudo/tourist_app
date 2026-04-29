@@ -19,6 +19,8 @@ const primaryGradient = LinearGradient(
 );
 
 class ScanScreen extends StatefulWidget {
+  const ScanScreen({super.key});
+
   @override
   _ScanScreenState createState() => _ScanScreenState();
 }

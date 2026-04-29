@@ -4,6 +4,8 @@ import '../../main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -43,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: bannerHeight,
                     fit: BoxFit.cover,
                     alignment: Alignment.topCenter,
-                    errorBuilder: (_, __, ___) {
+                    errorBuilder: (_, _, _) {
                       return Container(
                         color: Colors.grey,
                         child: Icon(Icons.image, size: 50),

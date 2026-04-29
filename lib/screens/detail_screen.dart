@@ -40,7 +40,7 @@ class _DetailScreenState extends State<DetailScreen> {
     String video = widget.data.videoUrl;
 
     if (video.isNotEmpty) {
-      _controller = VideoPlayerController.asset("assets/" + video)
+      _controller = VideoPlayerController.asset("assets/$video")
         ..initialize().then((_) {
           if (mounted) {
             setState(() {});
