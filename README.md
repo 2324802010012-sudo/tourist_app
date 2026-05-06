@@ -10,6 +10,20 @@
 * 🤖 Nhận diện địa điểm bằng AI
 * 🌐 Gọi API backend để dự đoán
 * 📊 Trả về tên địa điểm + độ chính xác
+* 🎬 Tự động phát video giới thiệu sau khi nhận dạng thành công
+* 🧠 Chỉ xác nhận địa điểm khi độ tin cậy từ 70% trở lên
+* 🧭 Mở Google Maps để chỉ đường, tìm quán ăn và khách sạn gần địa điểm
+* 🗣️ Trợ lý du lịch gợi ý điểm nổi bật, giờ tham quan, chi phí và tuyến kết hợp
+* ❤️ Lưu yêu thích và lịch sử nhận dạng
+
+---
+
+# ✨ Điểm nâng cấp nổi bật
+
+* Màn kết quả phục vụ trực tiếp khách du lịch: có video tự phát, badge độ tin cậy AI, ảnh thư viện, trợ lý du lịch, lịch trình nhanh và địa điểm liên quan.
+* Khi AI dưới 70% độ tin cậy, app báo không nhận diện được và chỉ hiển thị địa điểm gần giống dưới dạng tham khảo.
+* Backend `/predict` trả thêm `is_confident`, `recognized`, `confidence_threshold`, `top3` kèm thông tin địa điểm để app kiểm soát ngưỡng nhận diện rõ ràng.
+* Model dữ liệu Flutter đã hỗ trợ lưu confidence, top matches và thời điểm nhận dạng vào lịch sử.
 
 ---
 
@@ -18,6 +32,9 @@
 * Flutter (Mobile App)
 * FastAPI (Backend)
 * TensorFlow / Keras (Model AI)
+* Firebase Auth
+* Shared Preferences
+* url_launcher
 
 ---
 
@@ -113,7 +130,7 @@ flutter run
 ## Bước 2: Chạy backend
 
 ```bash
-uvicorn backend.api:app --host 0.0.0.0 --port 8000
+uvicorn backend.main:app --host 0.0.0.0 --port 8000
 ```
 
 ## Bước 3: Lấy IP máy tính
@@ -157,6 +174,18 @@ Mở trình duyệt:
 ```
 http://127.0.0.1:8000/docs
 ```
+
+Kiểm tra backend:
+
+```
+http://127.0.0.1:8000/health
+```
+
+Luồng demo đề xuất:
+
+1. Chạy backend bằng `uvicorn backend.main:app --host 0.0.0.0 --port 8000`.
+2. Mở app, chọn `Lens`, chụp hoặc chọn ảnh một địa điểm trong tập dữ liệu.
+3. Trình bày kết quả từ 70% độ tin cậy trở lên, video tự phát, trợ lý du lịch, chỉ đường và lịch trình gợi ý.
 
 ---
 

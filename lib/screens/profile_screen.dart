@@ -60,6 +60,8 @@ class ProfileScreen extends StatelessWidget {
                       onPressed: () async {
                         await FirebaseAuth.instance.signOut();
 
+                        if (!context.mounted) return;
+
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(builder: (_) => WelcomeScreen()),

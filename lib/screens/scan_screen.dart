@@ -1,14 +1,13 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'detail_screen.dart';
-import 'dart:math';
 import 'fail_result_screen.dart';
 import '../models/location_model.dart';
 import '../services/history_service.dart';
 import '../services/api_service.dart';
+import '../services/location_service.dart';
 
 // 🎨 THEME
 const primaryGradient = LinearGradient(
@@ -22,7 +21,7 @@ class ScanScreen extends StatefulWidget {
   const ScanScreen({super.key});
 
   @override
-  _ScanScreenState createState() => _ScanScreenState();
+  State<ScanScreen> createState() => _ScanScreenState();
 }
 
 class _ScanScreenState extends State<ScanScreen> {
@@ -45,7 +44,7 @@ class _ScanScreenState extends State<ScanScreen> {
       }
     } catch (e) {
       setState(() => isLoading = false);
-      print("Pick image error: $e");
+      debugPrint("Pick image error: $e");
     }
   }
 
@@ -63,7 +62,7 @@ class _ScanScreenState extends State<ScanScreen> {
           Positioned.fill(
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 2, sigmaY: 8),
-              child: Container(color: Colors.black.withOpacity(0.25)),
+              child: Container(color: Colors.black.withValues(alpha: 0.25)),
             ),
           ),
 
@@ -119,61 +118,136 @@ class _ScanScreenState extends State<ScanScreen> {
 
   // 🤖 AI
   Future<void> simulateAI() async {
-  try {
-    // 🌐 Gọi API thật thay vì đọc JSON giả
-    final result = await ApiService.predict(_image!);
+    try {
+      final result = await ApiService.predict(_image!);
 
-    if (result == null) {
-      // Không kết nối được server
+      if (!mounted) return;
+
+      if (result == null) {
+        setState(() => isLoading = false);
+        _openFailScreen();
+        return;
+      }
+
+      final label = _readLabel(result);
+      final confidence = _readConfidence(result['confidence']);
+      final topMatches = _readTopMatches(result);
+
+      if (label.isEmpty || !_isConfidentResult(result, confidence)) {
+        setState(() => isLoading = false);
+        _openFailScreen(suggestions: topMatches);
+        return;
+      }
+
+      final locations = await LocationService.loadLocationMaps();
+      if (!mounted) return;
+
+      final place = _findLocation(locations, label);
+
+      if (place == null) {
+        setState(() => isLoading = false);
+        _openFailScreen(suggestions: topMatches);
+        return;
+      }
+
+      final enrichedPlace = <String, dynamic>{
+        ...place,
+        'confidence': confidence,
+        'top3': topMatches.map(_candidateToJson).toList(),
+        'recognized_at': DateTime.now().toIso8601String(),
+      };
+
       setState(() => isLoading = false);
-      Navigator.push(context,
-        MaterialPageRoute(builder: (_) => FailResultScreen(image: _image)));
-      return;
-    }
+      await HistoryService.addHistory(enrichedPlace);
 
-    final String label = result['predicted_label'] ?? '';
-    final double confidence = (result['confidence'] ?? 0.0).toDouble();
+      if (!mounted) return;
 
-    // Ngưỡng tin cậy: dưới 60% thì coi là thất bại
-    if (label.isEmpty || confidence < 0.6) {
-      setState(() => isLoading = false);
-      Navigator.push(context,
-        MaterialPageRoute(builder: (_) => FailResultScreen(image: _image)));
-      return;
-    }
-
-    // 📍 Load locations từ assets để map sang Location object
-    String locationsData = await DefaultAssetBundle.of(context)
-        .loadString('assets/data/locations.json');
-    List locations = json.decode(locationsData);
-
-    final place = locations.firstWhere(
-      (item) => item['predicted_label'] == label,
-      orElse: () => null,
-    );
-
-    if (place != null && place.isNotEmpty) {
-      place['confidence'] = confidence;
-
-      setState(() => isLoading = false);
-      await HistoryService.addHistory(place);
-
-      Navigator.push(context,
+      Navigator.push(
+        context,
         MaterialPageRoute(
-          builder: (_) => DetailScreen(data: Location.fromJson(place)),
-        ));
-    } else {
+          builder: (_) => DetailScreen(data: Location.fromJson(enrichedPlace)),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
       setState(() => isLoading = false);
-      Navigator.push(context,
-        MaterialPageRoute(builder: (_) => FailResultScreen(image: _image)));
+      _openFailScreen();
+      debugPrint('AI error: $e');
     }
-  } catch (e) {
-    setState(() => isLoading = false);
-    Navigator.push(context,
-      MaterialPageRoute(builder: (_) => FailResultScreen(image: _image)));
-    print('AI error: $e');
   }
-}
+
+  String _readLabel(Map<String, dynamic> result) {
+    final location = result['location'];
+    final label =
+        result['predicted_label'] ??
+        result['label'] ??
+        (location is Map ? location['predicted_label'] : '');
+    return label?.toString().trim() ?? '';
+  }
+
+  double _readConfidence(Object? value) {
+    if (value is num) return value.toDouble();
+    return double.tryParse(value?.toString() ?? '') ?? 0;
+  }
+
+  bool _isConfidentResult(Map<String, dynamic> result, double confidence) {
+    final apiConfidence = result['is_confident'];
+    if (apiConfidence is bool) {
+      return apiConfidence && confidence >= Location.minRecognitionConfidence;
+    }
+
+    return confidence >= Location.minRecognitionConfidence;
+  }
+
+  List<PredictionCandidate> _readTopMatches(Map<String, dynamic> result) {
+    final top3 = result['top3'];
+    if (top3 is! List) return const [];
+
+    return top3
+        .whereType<Map>()
+        .map(
+          (item) =>
+              PredictionCandidate.fromJson(Map<String, dynamic>.from(item)),
+        )
+        .where((item) => item.predictedLabel.isNotEmpty)
+        .toList();
+  }
+
+  Map<String, dynamic>? _findLocation(
+    List<Map<String, dynamic>> locations,
+    String label,
+  ) {
+    final normalizedLabel = label.toLowerCase().trim();
+
+    for (final location in locations) {
+      final locationLabel = location['predicted_label']?.toString().trim();
+      if (locationLabel?.toLowerCase() == normalizedLabel) {
+        return Map<String, dynamic>.from(location);
+      }
+    }
+
+    return null;
+  }
+
+  Map<String, dynamic> _candidateToJson(PredictionCandidate candidate) {
+    return {
+      'predicted_label': candidate.predictedLabel,
+      'location_name': candidate.name,
+      'province': candidate.province,
+      'thumbnail_url': candidate.thumbnail.replaceFirst('assets/', ''),
+      'confidence': candidate.confidence,
+    };
+  }
+
+  void _openFailScreen({List<PredictionCandidate> suggestions = const []}) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) =>
+            FailResultScreen(image: _image, suggestions: suggestions),
+      ),
+    );
+  }
 
   Widget _scanCard() {
     return Container(
@@ -181,7 +255,7 @@ class _ScanScreenState extends State<ScanScreen> {
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.4),
+            color: Colors.black.withValues(alpha: 0.4),
             blurRadius: 30,
             offset: Offset(0, 15),
           ),
@@ -194,9 +268,9 @@ class _ScanScreenState extends State<ScanScreen> {
           child: Container(
             padding: EdgeInsets.all(18),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.18), // 👈 glass rõ hơn
+              color: Colors.white.withValues(alpha: 0.18), // 👈 glass rõ hơn
               borderRadius: BorderRadius.circular(28),
-              border: Border.all(color: Colors.white.withOpacity(0.3)),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
             ),
             child: Stack(
               children: [
@@ -223,7 +297,7 @@ class _ScanScreenState extends State<ScanScreen> {
                   Positioned.fill(
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.5),
+                        color: Colors.black.withValues(alpha: 0.5),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Center(
@@ -309,7 +383,7 @@ class _ScanScreenState extends State<ScanScreen> {
       child: Container(
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.3),
+          color: Colors.white.withValues(alpha: 0.3),
           shape: BoxShape.circle,
         ),
         child: Icon(icon, color: Colors.white),
@@ -362,12 +436,12 @@ class _ScanScreenState extends State<ScanScreen> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Colors.white.withOpacity(0.25),
-                Colors.white.withOpacity(0.08),
+                Colors.white.withValues(alpha: 0.25),
+                Colors.white.withValues(alpha: 0.08),
               ],
             ),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.white.withOpacity(0.3)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
           ),
           child: child,
         ),
@@ -385,7 +459,12 @@ class _ScanScreenState extends State<ScanScreen> {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: const Color.fromARGB(255, 127, 222, 164).withOpacity(0.4),
+              color: const Color.fromARGB(
+                255,
+                127,
+                222,
+                164,
+              ).withValues(alpha: 0.4),
               blurRadius: 10,
               offset: Offset(0, 6),
             ),

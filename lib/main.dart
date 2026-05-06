@@ -7,13 +7,15 @@ import 'screens/profile_screen.dart';
 import 'screens/favorite_screen.dart';
 import 'screens/history_screen.dart';
 import 'screens/scan_screen.dart';
+import 'screens/detail_screen.dart';
+import 'models/location_model.dart';
 import 'package:tourist_app/screens/auth/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(); // ✅ ĐÚNG
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -34,7 +36,7 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -63,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
         isLoading = false;
       });
     } catch (e) {
-      print("❌ Lỗi JSON: $e");
+      debugPrint("❌ Lỗi JSON: $e");
       setState(() {
         isLoading = false;
       });
@@ -125,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void handleTopButtonClick(String text) {
-    if (text == "Lens") {
+    if (text == "Quét AI") {
       // ✅ Cho dùng luôn
       Navigator.push(context, MaterialPageRoute(builder: (_) => ScanScreen()));
     } else {
@@ -223,14 +225,30 @@ class _HomeScreenState extends State<HomeScreen> {
                             var item = filteredLocations[index];
 
                             return ListTile(
-                              leading: Image.asset(
-                                'assets/${item['thumbnail_url']}',
-                                width: 50,
-                                height: 50,
-                                fit: BoxFit.cover,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => DetailScreen(
+                                      data: Location.fromJson(
+                                        Map<String, dynamic>.from(item),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                              leading: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.asset(
+                                  'assets/${item['thumbnail_url']}',
+                                  width: 54,
+                                  height: 54,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                               title: Text(item['location_name']),
                               subtitle: Text(item['province']),
+                              trailing: const Icon(Icons.chevron_right),
                             );
                           },
                         ),
@@ -253,7 +271,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
 
                       SizedBox(height: 14),
-                      // ⚡ BUTTON (YÊU THÍCH - LỊCH SỬ - LENS)
+                      // ⚡ BUTTON (YÊU THÍCH - LỊCH SỬ - QUÉT AI)
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12),
                         child: Row(
@@ -261,7 +279,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             buildTopButton(Icons.favorite_border, "Yêu thích"),
                             buildTopButton(Icons.history, "Lịch sử"),
-                            buildTopButton(Icons.qr_code_scanner, "Lens"),
+                            buildTopButton(Icons.qr_code_scanner, "Quét AI"),
                           ],
                         ),
                       ),
@@ -403,7 +421,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 6,
                     offset: Offset(0, 3),
                   ),

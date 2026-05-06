@@ -7,7 +7,7 @@ class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -59,9 +59,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Colors.black.withOpacity(0.4),
+                        Colors.black.withValues(alpha: 0.4),
                         Colors.transparent,
-                        Colors.black.withOpacity(0.3),
+                        Colors.black.withValues(alpha: 0.3),
                       ],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
@@ -113,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.08),
+                      color: Colors.black.withValues(alpha: 0.08),
                       blurRadius: 15,
                       offset: Offset(0, -5),
                     ),
@@ -218,6 +218,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
                               await FirebaseAuth.instance.currentUser!.reload();
 
+                              if (!context.mounted) return;
+
                               Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(builder: (_) => HomeScreen()),
@@ -237,6 +239,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   message = "Tài khoản đã bị khóa";
                                 }
                               }
+
+                              if (!context.mounted) return;
 
                               ScaffoldMessenger.of(
                                 context,

@@ -8,7 +8,7 @@ class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});
 
   @override
-  _FavoriteScreenState createState() => _FavoriteScreenState();
+  State<FavoriteScreen> createState() => _FavoriteScreenState();
 }
 
 class _FavoriteScreenState extends State<FavoriteScreen> {
@@ -25,8 +25,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   void loadFavorites() async {
     var all = await LocationService.loadLocations();
     var favIds = await FavoriteService.getFavorites();
-
-    print("FAV IDS: $favIds"); // debug
 
     setState(() {
       favoriteList = all.where((loc) {

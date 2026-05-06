@@ -17,6 +17,7 @@ CLASS_NAMES_PATH = BASE_DIR / "models" / "class_names.json"
 LOCATIONS_PATH = BASE_DIR / "config" / "locations.json"
 LABELS_PATH = BASE_DIR / "config" / "labels.json"
 IMG_SIZE = 224
+CONFIDENCE_THRESHOLD = 0.7
 
 app = FastAPI(title="Tourism AI Backend", version="1.1.0-new-labels")
 app.add_middleware(
@@ -104,6 +105,30 @@ def image_to_batch(content: bytes) -> np.ndarray:
     return np.expand_dims(arr, axis=0)
 
 
+def prediction_item(index: int, confidence: float) -> dict[str, Any]:
+    label = class_names[index]
+    location = locations_by_label.get(
+        label,
+        {
+            "id": label,
+            "label": label,
+            "predicted_label": label,
+            "name": label,
+            "location_name": label,
+        },
+    )
+    return {
+        "label": label,
+        "predicted_label": label,
+        "name": location.get("name") or location.get("location_name") or label,
+        "location_name": location.get("location_name") or location.get("name") or label,
+        "province": location.get("province", ""),
+        "thumbnail_url": location.get("thumbnail_url", ""),
+        "confidence": round(float(confidence), 5),
+        "location": location,
+    }
+
+
 @app.get("/health")
 def health() -> dict[str, Any]:
     return {
@@ -140,6 +165,8 @@ async def predict(file: UploadFile = File(...)) -> dict[str, Any]:
     label = class_names[best_idx]
     confidence = float(preds[best_idx])
     location = locations_by_label.get(label, {"id": label, "label": label, "predicted_label": label, "name": label, "location_name": label})
+    top_predictions = [prediction_item(int(i), float(preds[int(i)])) for i in top_idx]
+    is_confident = confidence >= CONFIDENCE_THRESHOLD
     return {
         "id": location.get("id", label),
         "label": label,
@@ -147,15 +174,9 @@ async def predict(file: UploadFile = File(...)) -> dict[str, Any]:
         "name": location.get("name") or location.get("location_name") or label,
         "location_name": location.get("location_name") or location.get("name") or label,
         "confidence": round(confidence, 5),
-        "top3": [
-            {
-                "label": class_names[int(i)],
-                "predicted_label": class_names[int(i)],
-                "name": (locations_by_label.get(class_names[int(i)], {}).get("name") or locations_by_label.get(class_names[int(i)], {}).get("location_name") or class_names[int(i)]),
-                "location_name": (locations_by_label.get(class_names[int(i)], {}).get("location_name") or locations_by_label.get(class_names[int(i)], {}).get("name") or class_names[int(i)]),
-                "confidence": round(float(preds[int(i)]), 5),
-            }
-            for i in top_idx
-        ],
+        "is_confident": is_confident,
+        "recognized": is_confident,
+        "confidence_threshold": CONFIDENCE_THRESHOLD,
+        "top3": top_predictions,
         "location": location,
     }
