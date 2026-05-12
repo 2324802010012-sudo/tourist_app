@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 
 import '../models/location_model.dart';
 import '../services/favorite_service.dart';
+import '../services/feedback_service.dart';
 import '../services/location_service.dart';
+import 'auth/login_screen.dart';
 import 'full_gallery_screen.dart';
 
 const primaryGradient = LinearGradient(
@@ -15,6 +18,15 @@ const primaryGradient = LinearGradient(
 );
 
 const softBg = Color(0xFFF5F6FA);
+
+class _InfoItem {
+  final IconData icon;
+  final String title;
+  final String value;
+  final Color color;
+
+  const _InfoItem(this.icon, this.title, this.value, this.color);
+}
 
 class DetailScreen extends StatefulWidget {
   final Location data;
@@ -30,7 +42,9 @@ class _DetailScreenState extends State<DetailScreen> {
   int currentIndex = 0;
   bool isFav = false;
   bool isLoadingRelated = true;
+  bool isVideoFailed = false;
   List<Location> relatedLocations = [];
+  List<Location> allLocations = [];
 
   @override
   void initState() {
@@ -47,12 +61,19 @@ class _DetailScreenState extends State<DetailScreen> {
     final controller = VideoPlayerController.asset("assets/$video");
     _controller = controller;
 
-    await controller.initialize();
-    await controller.setLooping(true);
-    await controller.play();
+    try {
+      await controller.initialize();
+      await controller.setLooping(true);
+      await controller.play();
 
-    if (mounted) {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
+    } catch (e) {
+      debugPrint("Video load error: $e");
+      if (mounted) {
+        setState(() => isVideoFailed = true);
+      }
     }
   }
 
@@ -64,13 +85,14 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   Future<void> _loadRelatedLocations() async {
-    final allLocations = await LocationService.loadLocations();
+    final loadedLocations = await LocationService.loadLocations();
     final relatedIds = widget.data.relatedLocations.toSet();
 
     if (!mounted) return;
 
     setState(() {
-      relatedLocations = allLocations
+      allLocations = loadedLocations;
+      relatedLocations = loadedLocations
           .where((location) => relatedIds.contains(location.predictedLabel))
           .toList();
       isLoadingRelated = false;
@@ -177,6 +199,11 @@ class _DetailScreenState extends State<DetailScreen> {
     final controller = _controller;
     final isVideoReady = controller != null && controller.value.isInitialized;
     final isPlaying = isVideoReady && controller.value.isPlaying;
+    final mediaText = isVideoFailed
+        ? "Video chưa tải"
+        : isVideoReady
+        ? "Video tự phát"
+        : "Ảnh địa điểm";
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(22),
@@ -220,6 +247,21 @@ class _DetailScreenState extends State<DetailScreen> {
                   ),
                 ),
               ),
+            if (isVideoReady)
+              Positioned(
+                left: 14,
+                right: 14,
+                bottom: 56,
+                child: VideoProgressIndicator(
+                  controller,
+                  allowScrubbing: true,
+                  colors: const VideoProgressColors(
+                    playedColor: Color(0xFF2FAE66),
+                    bufferedColor: Colors.white54,
+                    backgroundColor: Colors.black38,
+                  ),
+                ),
+              ),
             Positioned(
               left: 14,
               right: 14,
@@ -227,8 +269,12 @@ class _DetailScreenState extends State<DetailScreen> {
               child: Row(
                 children: [
                   _mediaBadge(
-                    isVideoReady ? Icons.smart_display : Icons.image,
-                    isVideoReady ? "Video tự phát" : "Ảnh địa điểm",
+                    isVideoFailed
+                        ? Icons.error_outline
+                        : isVideoReady
+                        ? Icons.smart_display
+                        : Icons.image,
+                    mediaText,
                   ),
                   const Spacer(),
                   if (isVideoReady)
@@ -343,49 +389,158 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   Widget _actionPanel() {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 10)],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _action(
-            isFav ? Icons.favorite : Icons.favorite_border,
-            "Yêu thích",
-            isFav ? Colors.red : Colors.pink,
-            _toggleFavorite,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final secondaryColumns = constraints.maxWidth < 330 ? 2 : 3;
+        return Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: const Color(0xFFE5ECE5)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.06),
+                blurRadius: 18,
+                offset: const Offset(0, 10),
+              ),
+            ],
           ),
-          _action(Icons.directions, "Chỉ đường", Colors.blue, _openDirections),
-          _action(Icons.play_circle, "Video", Colors.deepPurple, _playVideo),
-          _action(Icons.ios_share, "Chia sẻ", Colors.green, _copyTravelInfo),
-        ],
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: _primaryAction(
+                      isFav ? Icons.favorite : Icons.favorite_border,
+                      isFav ? "Đã yêu thích" : "Yêu thích",
+                      isFav ? Colors.red : Colors.pink,
+                      _toggleFavorite,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: _primaryAction(
+                      Icons.directions,
+                      "Chỉ đường",
+                      Colors.blue,
+                      _openDirections,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              GridView.count(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: secondaryColumns,
+                mainAxisSpacing: 8,
+                crossAxisSpacing: 8,
+                childAspectRatio: secondaryColumns == 2 ? 2.8 : 2.0,
+                children: [
+                  _secondaryAction(
+                    Icons.play_circle,
+                    "Video",
+                    Colors.deepPurple,
+                    _playVideo,
+                  ),
+                  _secondaryAction(
+                    Icons.rate_review,
+                    "Phản hồi",
+                    Colors.teal,
+                    _showFeedbackSheet,
+                  ),
+                  _secondaryAction(
+                    Icons.ios_share,
+                    "Chia sẻ",
+                    Colors.green,
+                    _copyTravelInfo,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _primaryAction(
+    IconData icon,
+    String text,
+    Color color,
+    VoidCallback onTap,
+  ) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(8),
+      onTap: onTap,
+      child: Ink(
+        height: 58,
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: color.withValues(alpha: 0.18)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 34,
+              height: 34,
+              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+              child: Icon(icon, color: Colors.white, size: 19),
+            ),
+            const SizedBox(width: 9),
+            Expanded(
+              child: Text(
+                text,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: color,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 13,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _action(IconData icon, String text, Color color, VoidCallback onTap) {
+  Widget _secondaryAction(
+    IconData icon,
+    String text,
+    Color color,
+    VoidCallback onTap,
+  ) {
     return InkWell(
-      borderRadius: BorderRadius.circular(14),
+      borderRadius: BorderRadius.circular(8),
       onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+      child: Ink(
+        padding: const EdgeInsets.symmetric(horizontal: 9),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF7FAF7),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: const Color(0xFFE5ECE5)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
+            Icon(icon, color: color, size: 18),
+            const SizedBox(width: 6),
+            Flexible(
+              child: Text(
+                text,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w800,
+                ),
               ),
-              child: Icon(icon, color: color),
             ),
-            const SizedBox(height: 6),
-            Text(text, style: const TextStyle(fontSize: 12)),
           ],
         ),
       ),
@@ -393,69 +548,134 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   Widget _infoPanel(Location data) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
+    final items = [
+      _InfoItem(Icons.location_city, "Khu vực", data.province, Colors.indigo),
+      _InfoItem(
+        Icons.access_time,
+        "Giờ mở cửa",
+        data.openingHours,
+        Colors.green,
       ),
-      child: Row(
-        children: [
-          Expanded(
-            child: _infoItem(
-              Icons.location_city,
-              "Khu vực",
-              data.province,
-              Colors.indigo,
-            ),
-          ),
-          _divider(),
-          Expanded(
-            child: _infoItem(
-              Icons.access_time,
-              "Giờ mở cửa",
-              data.openingHours,
-              Colors.green,
-            ),
-          ),
-          _divider(),
-          Expanded(
-            child: _infoItem(
-              Icons.confirmation_num,
-              "Giá vé",
-              data.ticketPrice,
-              Colors.orange,
-            ),
-          ),
-        ],
+      _InfoItem(
+        Icons.confirmation_num,
+        "Giá vé",
+        data.ticketPrice,
+        Colors.orange,
       ),
+    ];
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final columns = constraints.maxWidth < 390 ? 1 : 3;
+        return Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: const Color(0xFFE5ECE5)),
+          ),
+          child: GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: items.length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: columns,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
+              mainAxisExtent: columns == 1 ? 72 : 92,
+            ),
+            itemBuilder: (context, index) {
+              final item = items[index];
+              return _infoItem(
+                item.icon,
+                item.title,
+                item.value,
+                item.color,
+                horizontal: columns == 1,
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
-  Widget _infoItem(IconData icon, String title, String value, Color color) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 6),
+  Widget _infoItem(
+    IconData icon,
+    String title,
+    String value,
+    Color color, {
+    required bool horizontal,
+  }) {
+    final displayValue = value.isEmpty ? "Đang cập nhật" : value;
+
+    if (horizontal) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: color, size: 22),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(fontSize: 11, color: Colors.black54),
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    displayValue,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, color: color, size: 21),
-          const SizedBox(height: 7),
-          Text(title, style: const TextStyle(fontSize: 11, color: Colors.grey)),
-          const SizedBox(height: 4),
+          const SizedBox(height: 6),
           Text(
-            value.isEmpty ? "Đang cập nhật" : value,
-            maxLines: 2,
-            textAlign: TextAlign.center,
+            title,
+            maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700),
+            style: const TextStyle(fontSize: 11, color: Colors.black54),
+          ),
+          const SizedBox(height: 4),
+          Expanded(
+            child: Text(
+              displayValue,
+              maxLines: 2,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800),
+            ),
           ),
         ],
       ),
     );
-  }
-
-  Widget _divider() {
-    return Container(height: 58, width: 1, color: Colors.grey[300]);
   }
 
   Widget _aiPanel(Location data) {
@@ -593,12 +813,21 @@ class _DetailScreenState extends State<DetailScreen> {
     final relatedNames = relatedLocations
         .map((location) => location.name)
         .toList();
-    final schedule = data.openingHours.isEmpty
+    final schedule = data.bestTime.isNotEmpty
+        ? "Thời gian phù hợp: ${data.bestTime}."
+        : data.openingHours.isEmpty
         ? "Nên kiểm tra giờ mở cửa trước khi xuất phát."
         : "Thời gian phù hợp: ${data.openingHours}.";
-    final ticket = data.ticketPrice.isEmpty
+    final ticket = data.estimatedCost.isNotEmpty
+        ? "Dự trù chi phí: ${data.estimatedCost}."
+        : data.ticketPrice.isEmpty
         ? "Giá vé đang cập nhật, hãy kiểm tra trước khi mua vé."
         : "Dự trù chi phí: ${data.ticketPrice}.";
+    final route = data.suggestedRoute.isNotEmpty
+        ? "Tuyến gợi ý: ${data.suggestedRoute}."
+        : relatedNames.isEmpty
+        ? "Có thể kết hợp thêm các điểm gần khu vực ${data.province}."
+        : "Có thể kết hợp: ${relatedNames.join(', ')}.";
     final highlights = data.highlights.take(3).toList();
     final highlightText = highlights.isEmpty
         ? "Dành thời gian quan sát toàn cảnh và các góc chụp nổi bật."
@@ -646,12 +875,10 @@ class _DetailScreenState extends State<DetailScreen> {
           _travelTipLine(Icons.auto_awesome, highlightText),
           _travelTipLine(Icons.schedule, schedule),
           _travelTipLine(Icons.payments, ticket),
-          _travelTipLine(
-            Icons.route,
-            relatedNames.isEmpty
-                ? "Có thể kết hợp thêm các điểm gần khu vực ${data.province}."
-                : "Có thể kết hợp: ${relatedNames.join(', ')}.",
-          ),
+          _travelTipLine(Icons.route, route),
+          ...data.travelTips
+              .take(3)
+              .map((tip) => _travelTipLine(Icons.tips_and_updates, tip)),
         ],
       ),
     );
@@ -897,11 +1124,43 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   Future<void> _toggleFavorite() async {
+    if (!_requireLogin("lưu địa điểm yêu thích")) return;
+
     await FavoriteService.toggleFavorite(widget.data.predictedLabel);
     if (mounted) {
       setState(() => isFav = !isFav);
       _showSnackBar(isFav ? "Đã lưu yêu thích" : "Đã bỏ yêu thích");
     }
+  }
+
+  bool _requireLogin(String feature) {
+    if (FirebaseAuth.instance.currentUser != null) return true;
+
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text("Cần đăng nhập"),
+        content: Text("Bạn cần đăng nhập để $feature."),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Để sau"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const LoginScreen()),
+              );
+            },
+            child: const Text("Đăng nhập"),
+          ),
+        ],
+      ),
+    );
+
+    return false;
   }
 
   void _toggleVideo() {
@@ -925,6 +1184,7 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   String get _mapsQuery {
+    if (widget.data.mapQuery.isNotEmpty) return widget.data.mapQuery;
     return widget.data.address.isEmpty ? widget.data.name : widget.data.address;
   }
 
@@ -960,8 +1220,13 @@ class _DetailScreenState extends State<DetailScreen> {
         ? data.description
         : "Ưu tiên ${data.highlights.take(3).join(', ')}.";
     final relatedText = relatedNames.isEmpty
-        ? "Sau khi tham quan, tìm thêm điểm gần ${data.province} nếu còn thời gian."
+        ? data.suggestedRoute.isNotEmpty
+              ? data.suggestedRoute
+              : "Sau khi tham quan, tìm thêm điểm gần ${data.province} nếu còn thời gian."
         : "Có thể đi tiếp ${relatedNames.join(', ')}.";
+    final arrivalText = data.bestTime.isEmpty
+        ? "Mở chỉ đường và ưu tiên đến sớm để có thời gian tham quan thoải mái."
+        : "Nên đi vào ${data.bestTime.toLowerCase()}";
 
     showModalBottomSheet(
       context: context,
@@ -986,7 +1251,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 _itineraryStep(
                   Icons.directions_walk,
                   "Đến địa điểm",
-                  "Mở chỉ đường và ưu tiên đến sớm để có thời gian tham quan thoải mái.",
+                  arrivalText,
                 ),
                 _itineraryStep(
                   Icons.photo_camera,
@@ -999,6 +1264,12 @@ class _DetailScreenState extends State<DetailScreen> {
                   "Tìm quán ăn gần khu vực ${data.province} sau khi tham quan.",
                 ),
                 _itineraryStep(Icons.near_me, "Kết hợp tuyến", relatedText),
+                if (data.travelTips.isNotEmpty)
+                  _itineraryStep(
+                    Icons.tips_and_updates,
+                    "Lưu ý",
+                    data.travelTips.take(2).join(' '),
+                  ),
               ],
             ),
           ),
@@ -1044,6 +1315,171 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
+  void _showFeedbackSheet() {
+    if (!_requireLogin("gửi phản hồi kết quả nhận dạng")) return;
+
+    final noteController = TextEditingController();
+    var verdict = "correct";
+    var correctedLabel = widget.data.predictedLabel;
+    var isSaving = false;
+    final selectableLocations = allLocations.isEmpty
+        ? <Location>[widget.data]
+        : allLocations;
+
+    showModalBottomSheet(
+      context: context,
+      showDragHandle: true,
+      isScrollControlled: true,
+      builder: (sheetContext) {
+        return StatefulBuilder(
+          builder: (context, setSheetState) {
+            Future<void> submit() async {
+              final user = FirebaseAuth.instance.currentUser;
+              if (user == null) {
+                Navigator.pop(sheetContext);
+                return;
+              }
+
+              setSheetState(() => isSaving = true);
+              try {
+                await FeedbackService.submitFeedback(
+                  location: widget.data,
+                  verdict: verdict,
+                  userId: user.uid,
+                  userEmail: user.email,
+                  correctedLabel: verdict == "wrong" ? correctedLabel : null,
+                  note: noteController.text,
+                );
+
+                if (!sheetContext.mounted) return;
+                Navigator.pop(sheetContext);
+                if (mounted) {
+                  _showSnackBar("Cảm ơn bạn, phản hồi đã được ghi nhận.");
+                }
+              } catch (e) {
+                if (sheetContext.mounted) {
+                  setSheetState(() => isSaving = false);
+                }
+                if (mounted) {
+                  _showSnackBar("Không gửi được phản hồi. Vui lòng thử lại.");
+                }
+              }
+            }
+
+            return SafeArea(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(
+                  20,
+                  8,
+                  20,
+                  MediaQuery.of(context).viewInsets.bottom + 24,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Phản hồi kết quả ${widget.data.name}",
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        ChoiceChip(
+                          label: const Text("Kết quả đúng"),
+                          selected: verdict == "correct",
+                          onSelected: (_) {
+                            setSheetState(() => verdict = "correct");
+                          },
+                        ),
+                        ChoiceChip(
+                          label: const Text("Kết quả sai"),
+                          selected: verdict == "wrong",
+                          onSelected: (_) {
+                            setSheetState(() => verdict = "wrong");
+                          },
+                        ),
+                        ChoiceChip(
+                          label: const Text("Chỉ mang tính tham khảo"),
+                          selected: verdict == "uncertain",
+                          onSelected: (_) {
+                            setSheetState(() => verdict = "uncertain");
+                          },
+                        ),
+                      ],
+                    ),
+                    if (verdict == "wrong") ...[
+                      const SizedBox(height: 14),
+                      DropdownButtonFormField<String>(
+                        initialValue: correctedLabel,
+                        decoration: const InputDecoration(
+                          labelText: "Địa điểm đúng hơn",
+                          border: OutlineInputBorder(),
+                        ),
+                        items: selectableLocations
+                            .map(
+                              (location) => DropdownMenuItem(
+                                value: location.predictedLabel,
+                                child: Text(location.name),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (value) {
+                          if (value != null) {
+                            setSheetState(() => correctedLabel = value);
+                          }
+                        },
+                      ),
+                    ],
+                    const SizedBox(height: 14),
+                    TextField(
+                      controller: noteController,
+                      minLines: 2,
+                      maxLines: 4,
+                      decoration: const InputDecoration(
+                        labelText: "Ghi chú thêm",
+                        hintText: "Ví dụ: ảnh bị lệch góc, địa điểm đúng là...",
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF2FAE66),
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
+                        onPressed: isSaving ? null : submit,
+                        icon: isSaving
+                            ? const SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : const Icon(Icons.send),
+                        label: Text(isSaving ? "Đang gửi..." : "Gửi phản hồi"),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    ).whenComplete(noteController.dispose);
+  }
+
   Future<void> _copyTravelInfo() async {
     final data = widget.data;
     final relatedNames = relatedLocations
@@ -1056,6 +1492,11 @@ class _DetailScreenState extends State<DetailScreen> {
       "Điểm nổi bật: ${data.highlights.join(', ')}",
       "Giờ mở cửa: ${data.openingHours}",
       "Giá vé: ${data.ticketPrice}",
+      if (data.bestTime.isNotEmpty) "Thời gian phù hợp: ${data.bestTime}",
+      if (data.estimatedCost.isNotEmpty)
+        "Chi phí dự kiến: ${data.estimatedCost}",
+      if (data.suggestedRoute.isNotEmpty) "Tuyến gợi ý: ${data.suggestedRoute}",
+      if (data.travelTips.isNotEmpty) "Lưu ý: ${data.travelTips.join(' ')}",
       if (relatedNames.isNotEmpty) "Có thể kết hợp: ${relatedNames.join(', ')}",
     ].where((item) => item.trim().isNotEmpty).join('\n');
 

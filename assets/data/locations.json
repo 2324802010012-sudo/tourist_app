@@ -8,6 +8,15 @@
     "description": "Hồ Gươm là biểu tượng nổi tiếng của thủ đô Hà Nội, gắn với Tháp Rùa và không gian văn hóa lịch sử lâu đời.",
     "opening_hours": "Cả ngày",
     "ticket_price": "Miễn phí",
+    "best_time": "Sáng sớm hoặc sau 17:00, đặc biệt cuối tuần khi phố đi bộ hoạt động.",
+    "estimated_cost": "0-150.000đ/người cho tham quan, gửi xe và đồ uống nhẹ.",
+    "suggested_route": "Hồ Gươm -> Phố cổ Hà Nội -> Văn Miếu hoặc Lăng Bác.",
+    "travel_tips": [
+      "Nên đi bộ quanh hồ để cảm nhận trọn không gian trung tâm.",
+      "Buổi tối cuối tuần đông, nên giữ tư trang cẩn thận.",
+      "Kết hợp tham quan phố cổ và thưởng thức ẩm thực Hà Nội."
+    ],
+    "map_query": "Hồ Hoàn Kiếm, Hoàn Kiếm, Hà Nội",
     "highlights": [
       "Tháp Rùa",
       "Phố đi bộ",
@@ -29,6 +38,15 @@
     "description": "Văn Miếu - Quốc Tử Giám là quần thể di tích lịch sử, văn hóa tiêu biểu, được xem là trường đại học đầu tiên của Việt Nam.",
     "opening_hours": "Theo giờ tham quan",
     "ticket_price": "Có thu phí",
+    "best_time": "Buổi sáng trong tuần để tránh đông và có ánh sáng đẹp.",
+    "estimated_cost": "30.000-100.000đ/người tùy đối tượng và dịch vụ đi kèm.",
+    "suggested_route": "Văn Miếu -> Hồ Gươm -> Lăng Bác.",
+    "travel_tips": [
+      "Trang phục lịch sự khi tham quan khu di tích.",
+      "Dành thời gian đọc các bảng giới thiệu để hiểu giá trị lịch sử.",
+      "Nên chụp ảnh ở khu bia tiến sĩ và cổng chính vào buổi sáng."
+    ],
+    "map_query": "Văn Miếu Quốc Tử Giám, Đống Đa, Hà Nội",
     "highlights": [
       "Quốc Tử Giám",
       "Bia tiến sĩ",
@@ -50,6 +68,15 @@
     "description": "Lăng Bác là nơi an nghỉ của Chủ tịch Hồ Chí Minh, đồng thời là địa điểm lịch sử và chính trị đặc biệt quan trọng.",
     "opening_hours": "Theo khung giờ tham quan",
     "ticket_price": "Miễn phí hoặc theo quy định tham quan",
+    "best_time": "Sáng sớm theo lịch mở cửa chính thức, nên kiểm tra lịch trước khi đi.",
+    "estimated_cost": "0-80.000đ/người cho tham quan, gửi xe và nước uống.",
+    "suggested_route": "Lăng Bác -> Phủ Chủ tịch -> Văn Miếu -> Hồ Gươm.",
+    "travel_tips": [
+      "Mang trang phục lịch sự, không mặc đồ quá ngắn.",
+      "Tuân thủ hướng dẫn an ninh và khu vực không được quay chụp.",
+      "Nên đến sớm để xếp hàng thuận lợi hơn."
+    ],
+    "map_query": "Lăng Chủ tịch Hồ Chí Minh, Ba Đình, Hà Nội",
     "highlights": [
       "Quảng trường Ba Đình",
       "Phủ Chủ tịch",
@@ -71,6 +98,15 @@
     "description": "Vịnh Hạ Long là di sản thiên nhiên nổi tiếng với hàng nghìn đảo đá vôi và cảnh quan biển đặc sắc.",
     "opening_hours": "Theo tuyến tham quan",
     "ticket_price": "Có thu phí",
+    "best_time": "Tháng 10 đến tháng 4 hoặc sáng sớm khi thời tiết mát và biển êm.",
+    "estimated_cost": "300.000-1.500.000đ/người tùy tuyến tàu và dịch vụ.",
+    "suggested_route": "Bến tàu Hạ Long -> Hang Sửng Sốt -> Đảo Titop -> làng chài.",
+    "travel_tips": [
+      "Đặt vé tàu hoặc tour trước vào mùa cao điểm.",
+      "Chuẩn bị áo khoác nhẹ, kem chống nắng và thuốc say sóng nếu cần.",
+      "Theo dõi thời tiết vì tàu có thể đổi lịch khi biển động."
+    ],
+    "map_query": "Vịnh Hạ Long, Quảng Ninh",
     "highlights": [
       "Di sản thiên nhiên",
       "Đảo đá vôi",
@@ -92,6 +128,15 @@
     "description": "Tràng An nổi bật với hệ thống núi đá vôi, hang động và các tuyến du lịch sinh thái bằng thuyền.",
     "opening_hours": "Theo giờ tham quan",
     "ticket_price": "Có thu phí",
+    "best_time": "Sáng sớm hoặc sau 15:00 để đi thuyền dễ chịu hơn.",
+    "estimated_cost": "250.000-500.000đ/người tùy tuyến tham quan.",
+    "suggested_route": "Tràng An -> Hang Múa -> cố đô Hoa Lư.",
+    "travel_tips": [
+      "Đội nón, mang nước và chống nắng khi đi thuyền.",
+      "Chọn tuyến thuyền phù hợp thời gian và sức khỏe.",
+      "Giữ vệ sinh cảnh quan trong khu di sản."
+    ],
+    "map_query": "Khu du lịch sinh thái Tràng An, Ninh Bình",
     "highlights": [
       "Du lịch sinh thái",
       "Hang động",
@@ -113,6 +158,15 @@
     "description": "Phố cổ Hội An là điểm đến nổi bật với kiến trúc cổ, đèn lồng và không gian văn hóa truyền thống đặc sắc.",
     "opening_hours": "Cả ngày hoặc theo khu vực tham quan",
     "ticket_price": "Có khu vực thu phí",
+    "best_time": "Chiều muộn đến tối khi đèn lồng lên màu đẹp nhất.",
+    "estimated_cost": "120.000-600.000đ/người cho vé khu cổ, ăn uống và trải nghiệm.",
+    "suggested_route": "Chùa Cầu -> phố đèn lồng -> sông Hoài -> làng gốm Thanh Hà.",
+    "travel_tips": [
+      "Nên đi bộ hoặc thuê xe đạp trong khu phố cổ.",
+      "Buổi tối đông, đặt bàn ăn trước nếu đi nhóm.",
+      "Tôn trọng không gian sống của cư dân địa phương."
+    ],
+    "map_query": "Phố cổ Hội An, Quảng Nam",
     "highlights": [
       "Đèn lồng",
       "Kiến trúc cổ",
@@ -134,6 +188,15 @@
     "description": "Bà Nà Hills là khu du lịch nổi tiếng với cáp treo, làng Pháp và nhiều công trình tham quan trên núi.",
     "opening_hours": "8:00 - 22:00",
     "ticket_price": "550.000-1200.000đ",
+    "best_time": "Sáng sớm trong ngày nắng nhẹ để có nhiều thời gian tham quan.",
+    "estimated_cost": "900.000-1.800.000đ/người gồm vé, ăn uống và di chuyển.",
+    "suggested_route": "Cáp treo -> Cầu Vàng -> Làng Pháp -> khu vui chơi Fantasy Park.",
+    "travel_tips": [
+      "Mang áo khoác mỏng vì thời tiết trên núi thay đổi nhanh.",
+      "Mua vé online trước để giảm thời gian chờ.",
+      "Kiểm tra lịch cáp treo và show diễn trong ngày."
+    ],
+    "map_query": "Bà Nà Hills, Hòa Vang, Đà Nẵng",
     "highlights": [
       "Cáp treo",
       "Làng Pháp",
@@ -155,6 +218,15 @@
     "description": "Cầu Vàng là công trình nổi bật với thiết kế độc đáo được nâng đỡ bởi đôi bàn tay khổng lồ giữa không gian núi cao.",
     "opening_hours": "8:00 - 18:30",
     "ticket_price": "350.000-450.000đ",
+    "best_time": "Sáng sớm hoặc lúc trời quang để nhìn rõ cảnh núi.",
+    "estimated_cost": "Đã nằm trong vé Bà Nà Hills, dự trù thêm 100.000-300.000đ.",
+    "suggested_route": "Cầu Vàng -> vườn hoa Le Jardin -> Làng Pháp -> Bà Nà Hills.",
+    "travel_tips": [
+      "Nên chụp sớm để tránh quá đông người trên cầu.",
+      "Chuẩn bị áo khoác nhẹ vì khu vực cầu có gió.",
+      "Giữ hàng di chuyển, không dừng quá lâu ở giữa cầu."
+    ],
+    "map_query": "Cầu Vàng, Bà Nà Hills, Đà Nẵng",
     "highlights": [
       "Thiết kế biểu tượng",
       "Check-in nổi tiếng",
@@ -183,6 +255,15 @@
     "description": "Chợ Bến Thành là một trong những biểu tượng lâu đời của TP. Hồ Chí Minh, nổi bật với kiến trúc đặc trưng và hoạt động mua bán sôi động.",
     "opening_hours": "Theo giờ hoạt động chợ",
     "ticket_price": "Miễn phí vào cổng",
+    "best_time": "Sáng đến đầu giờ chiều để mua sắm, tối để trải nghiệm ẩm thực quanh chợ.",
+    "estimated_cost": "0-400.000đ/người tùy mua sắm và ăn uống.",
+    "suggested_route": "Chợ Bến Thành -> Dinh Độc Lập -> Nhà thờ Đức Bà.",
+    "travel_tips": [
+      "Hỏi giá trước khi mua và giữ tư trang khi đông người.",
+      "Nên thử các món ăn địa phương trong khu chợ.",
+      "Mang tiền mặt mệnh giá nhỏ để thanh toán nhanh."
+    ],
+    "map_query": "Chợ Bến Thành, Quận 1, Thành phố Hồ Chí Minh",
     "highlights": [
       "Biểu tượng thành phố",
       "Ẩm thực",
@@ -204,6 +285,15 @@
     "description": "Nhà thờ Đức Bà Sài Gòn là công trình kiến trúc tôn giáo nổi bật mang phong cách châu Âu, nằm ở trung tâm thành phố.",
     "opening_hours": "Theo thời gian tham quan và sinh hoạt tôn giáo",
     "ticket_price": "Miễn phí hoặc theo quy định khu vực tham quan",
+    "best_time": "Buổi sáng hoặc cuối chiều khi ánh sáng mềm và khu vực dễ chụp ảnh.",
+    "estimated_cost": "0-150.000đ/người cho tham quan, cà phê và di chuyển gần đó.",
+    "suggested_route": "Nhà thờ Đức Bà -> Bưu điện Thành phố -> Dinh Độc Lập -> Chợ Bến Thành.",
+    "travel_tips": [
+      "Kiểm tra tình trạng trùng tu và khu vực được phép tham quan.",
+      "Giữ trật tự vì đây là công trình tôn giáo.",
+      "Kết hợp Bưu điện Thành phố ở ngay gần bên."
+    ],
+    "map_query": "Nhà thờ Đức Bà Sài Gòn, Quận 1, Thành phố Hồ Chí Minh",
     "highlights": [
       "Kiến trúc cổ điển",
       "Vị trí trung tâm",
@@ -225,6 +315,15 @@
     "description": "Dinh Độc Lập là di tích lịch sử quan trọng, gắn liền với nhiều dấu mốc lớn trong lịch sử Việt Nam hiện đại.",
     "opening_hours": "Theo giờ tham quan",
     "ticket_price": "Có thu phí",
+    "best_time": "Buổi sáng trong tuần để tham quan các phòng trưng bày thoải mái.",
+    "estimated_cost": "40.000-150.000đ/người tùy vé và dịch vụ thuyết minh.",
+    "suggested_route": "Dinh Độc Lập -> Nhà thờ Đức Bà -> Chợ Bến Thành.",
+    "travel_tips": [
+      "Dành ít nhất 60-90 phút để xem các tầng và khu hầm.",
+      "Có thể thuê thuyết minh để hiểu rõ bối cảnh lịch sử.",
+      "Mang nước và đi giày thoải mái."
+    ],
+    "map_query": "Dinh Độc Lập, Quận 1, Thành phố Hồ Chí Minh",
     "highlights": [
       "Giá trị lịch sử",
       "Kiến trúc đặc trưng",
@@ -246,6 +345,15 @@
     "description": "Landmark 81 là tòa nhà cao tầng nổi bật, đại diện cho hình ảnh hiện đại và phát triển của TP. Hồ Chí Minh.",
     "opening_hours": "Theo khu vực dịch vụ",
     "ticket_price": "Tùy khu vực tham quan",
+    "best_time": "Chiều muộn đến tối để ngắm thành phố lên đèn.",
+    "estimated_cost": "200.000-900.000đ/người tùy khu quan sát, ăn uống và dịch vụ.",
+    "suggested_route": "Landmark 81 -> bờ sông Sài Gòn -> Chợ Bến Thành hoặc Dinh Độc Lập.",
+    "travel_tips": [
+      "Đặt vé khu quan sát trước nếu đi cuối tuần.",
+      "Kiểm tra thời tiết để tầm nhìn trên cao rõ hơn.",
+      "Kết hợp ăn uống và dạo bờ sông trong cùng buổi."
+    ],
+    "map_query": "Landmark 81, Bình Thạnh, Thành phố Hồ Chí Minh",
     "highlights": [
       "Tòa nhà biểu tượng",
       "Không gian hiện đại",

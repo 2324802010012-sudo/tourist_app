@@ -12,6 +12,11 @@ void main() {
       'description': 'Công trình biểu tượng trên núi.',
       'opening_hours': '8:00 - 18:30',
       'ticket_price': '350.000-450.000đ',
+      'best_time': 'Sáng sớm',
+      'estimated_cost': '100.000đ',
+      'suggested_route': 'Cầu Vàng -> Bà Nà Hills',
+      'travel_tips': ['Mang áo khoác'],
+      'map_query': 'Cầu Vàng, Đà Nẵng',
       'highlights': ['Check-in', 'Cảnh quan'],
       'video_url': 'videos/cau_vang.mp4',
       'thumbnail_url': 'images/cau_vang.jpg',
@@ -35,6 +40,9 @@ void main() {
     expect(location.hasAiResult, isTrue);
     expect(location.topMatches, hasLength(2));
     expect(location.topMatches.first.name, 'Cầu Vàng');
+    expect(location.bestTime, 'Sáng sớm');
+    expect(location.travelTips.single, 'Mang áo khoác');
+    expect(location.toStorageJson()['thumbnail_url'], 'images/cau_vang.jpg');
   });
 
   test('Location treats confidence below 70 percent as unrecognized', () {

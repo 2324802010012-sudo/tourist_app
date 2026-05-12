@@ -2,13 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 class ApiService {
   // 👇 Đổi thành IP máy tính của bạn khi test trên điện thoại thật
   // Dùng localhost nếu test trên emulator Android
-  static const String baseUrl = 'http://10.0.2.2:8000'; // Android emulator
-  // static const String baseUrl = 'http://localhost:8000'; // iOS simulator
-  //static const String baseUrl = 'http://172.17.224.1:8000'; // Điện thoại thật
+  //static const String baseUrl = 'http://10.0.2.2:8000'; // Android emulator
+  //static const String baseUrl = 'http://localhost:8000'; // iOS simulator
+  static const String baseUrl = 'http://192.168.101.17:8000'; // Điện thoại thật
   static const Duration timeout = Duration(seconds: 30);
 
   static Future<Map<String, dynamic>?> health() async {
@@ -34,7 +35,11 @@ class ApiService {
       final request = http.MultipartRequest('POST', uri);
 
       request.files.add(
-        await http.MultipartFile.fromPath('file', imageFile.path),
+        await http.MultipartFile.fromPath(
+          'file',
+          imageFile.path,
+          contentType: _imageContentType(imageFile.path),
+        ),
       );
 
       final streamedResponse = await request.send().timeout(timeout);
@@ -52,5 +57,14 @@ class ApiService {
       debugPrint('Network error: $e');
       return null;
     }
+  }
+
+  static MediaType _imageContentType(String path) {
+    final extension = path.split('.').last.toLowerCase();
+    return switch (extension) {
+      'jpg' || 'jpeg' => MediaType('image', 'jpeg'),
+      'png' => MediaType('image', 'png'),
+      _ => MediaType('application', 'octet-stream'),
+    };
   }
 }

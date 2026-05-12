@@ -53,6 +53,11 @@ class Location {
   final String description;
   final String openingHours;
   final String ticketPrice;
+  final String bestTime;
+  final String estimatedCost;
+  final String suggestedRoute;
+  final List<String> travelTips;
+  final String mapQuery;
   final List<String> highlights;
   final String videoUrl;
   final String thumbnail;
@@ -71,6 +76,11 @@ class Location {
     required this.description,
     required this.openingHours,
     required this.ticketPrice,
+    this.bestTime = '',
+    this.estimatedCost = '',
+    this.suggestedRoute = '',
+    this.travelTips = const [],
+    this.mapQuery = '',
     required this.highlights,
     required this.videoUrl,
     required this.thumbnail,
@@ -102,6 +112,11 @@ class Location {
       description: _stringValue(source['description']),
       openingHours: _stringValue(source['opening_hours']),
       ticketPrice: _stringValue(source['ticket_price']),
+      bestTime: _stringValue(source['best_time']),
+      estimatedCost: _stringValue(source['estimated_cost']),
+      suggestedRoute: _stringValue(source['suggested_route']),
+      travelTips: _stringList(source['travel_tips']),
+      mapQuery: _stringValue(source['map_query']),
       highlights: _stringList(source['highlights']),
       videoUrl: _stringValue(source['video_url']),
       thumbnail: _assetPath(_stringValue(source['thumbnail_url'])),
@@ -129,6 +144,11 @@ class Location {
       description: description,
       openingHours: openingHours,
       ticketPrice: ticketPrice,
+      bestTime: bestTime,
+      estimatedCost: estimatedCost,
+      suggestedRoute: suggestedRoute,
+      travelTips: travelTips,
+      mapQuery: mapQuery,
       highlights: highlights,
       videoUrl: videoUrl,
       thumbnail: thumbnail,
@@ -138,6 +158,46 @@ class Location {
       topMatches: topMatches ?? this.topMatches,
       recognizedAt: recognizedAt ?? this.recognizedAt,
     );
+  }
+
+  Map<String, dynamic> toStorageJson() {
+    return {
+      'id': id,
+      'predicted_label': predictedLabel,
+      'location_name': name,
+      'province': province,
+      'address': address,
+      'description': description,
+      'opening_hours': openingHours,
+      'ticket_price': ticketPrice,
+      'best_time': bestTime,
+      'estimated_cost': estimatedCost,
+      'suggested_route': suggestedRoute,
+      'travel_tips': travelTips,
+      'map_query': mapQuery,
+      'highlights': highlights,
+      'video_url': videoUrl,
+      'thumbnail_url': thumbnail.replaceFirst('assets/', ''),
+      if (gallery != null)
+        'gallery': gallery!
+            .map((item) => item.replaceFirst('assets/', ''))
+            .toList(),
+      'related_locations': relatedLocations,
+      'confidence': confidence,
+      'top3': topMatches
+          .map(
+            (item) => {
+              'predicted_label': item.predictedLabel,
+              'location_name': item.name,
+              'province': item.province,
+              'thumbnail_url': item.thumbnail.replaceFirst('assets/', ''),
+              'confidence': item.confidence,
+            },
+          )
+          .toList(),
+      if (recognizedAt != null)
+        'recognized_at': recognizedAt!.toIso8601String(),
+    };
   }
 }
 

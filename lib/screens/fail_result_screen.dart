@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../models/location_model.dart';
+import '../services/history_service.dart';
 import '../services/location_service.dart';
 import 'detail_screen.dart';
 
@@ -215,16 +216,19 @@ class _FailResultScreenState extends State<FailResultScreen> {
 
           return InkWell(
             borderRadius: BorderRadius.circular(18),
-            onTap: () {
+            onTap: () async {
+              final selectedLocation = location.copyWith(
+                topMatches: widget.suggestions,
+                recognizedAt: DateTime.now(),
+              );
+
+              await HistoryService.addHistory(selectedLocation.toStorageJson());
+              if (!context.mounted) return;
+
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => DetailScreen(
-                    data: location.copyWith(
-                      confidence: 0,
-                      topMatches: const [],
-                    ),
-                  ),
+                  builder: (_) => DetailScreen(data: selectedLocation),
                 ),
               );
             },

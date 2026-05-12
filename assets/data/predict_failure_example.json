@@ -1,7 +1,0 @@
-{
-  "success": false,
-  "predicted_label": null,
-  "location_name": null,
-  "confidence": 0.0,
-  "message": "Không thể nhận diện địa điểm từ ảnh này. Vui lòng thử ảnh rõ hơn."
-}

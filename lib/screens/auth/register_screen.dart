@@ -44,6 +44,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return;
     }
 
+    if (password.length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Mật khẩu phải có tối thiểu 6 ký tự")),
+      );
+      return;
+    }
+
     try {
       // 🔥 Firebase đăng ký
       UserCredential userCredential = await FirebaseAuth.instance
@@ -180,7 +187,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       _input(
                                         controller: emailController,
                                         icon: Icons.email,
-                                        hint: "Email hoặc số điện thoại",
+                                        hint: "Email",
                                       ),
 
                                       SizedBox(height: 12),

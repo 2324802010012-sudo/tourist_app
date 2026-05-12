@@ -145,7 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         controller: emailController,
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.email),
-                          hintText: "Email hoặc số điện thoại",
+                          hintText: "Email",
                           filled: true,
                           fillColor: Colors.grey[100],
                           border: OutlineInputBorder(

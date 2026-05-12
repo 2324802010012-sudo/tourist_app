@@ -25,27 +25,92 @@ class ScanScreen extends StatefulWidget {
 }
 
 class _ScanScreenState extends State<ScanScreen> {
+  static const int _maxImageBytes = 10 * 1024 * 1024;
+  static const int _minImageBytes = 12 * 1024;
+
   File? _image;
+  String? _imageValidationMessage;
   bool isLoading = false;
 
   final picker = ImagePicker();
   // 📸 PICK IMAGE
   Future<void> pickImage(ImageSource source) async {
     try {
-      final pickedFile = await picker.pickImage(source: source);
+      final pickedFile = await picker.pickImage(
+        source: source,
+        imageQuality: 88,
+        maxWidth: 1800,
+      );
 
       if (pickedFile != null) {
+        final image = File(pickedFile.path);
+        final validationMessage = await _validateImage(image);
+
         setState(() {
-          _image = File(pickedFile.path);
-          isLoading = true;
+          _image = image;
+          _imageValidationMessage = validationMessage;
+          isLoading = false;
         });
 
-        await simulateAI();
+        if (validationMessage != null) {
+          _showSnackBar(validationMessage);
+        }
       }
     } catch (e) {
       setState(() => isLoading = false);
+      _showSnackBar(
+        "Không thể mở camera hoặc thư viện. Hãy kiểm tra quyền truy cập.",
+      );
       debugPrint("Pick image error: $e");
     }
+  }
+
+  Future<String?> _validateImage(File file) async {
+    final extension = file.path.split('.').last.toLowerCase();
+    const acceptedExtensions = {'jpg', 'jpeg', 'png'};
+    if (!acceptedExtensions.contains(extension)) {
+      return "Ảnh cần ở định dạng JPG hoặc PNG.";
+    }
+
+    final size = await file.length();
+    if (size > _maxImageBytes) {
+      return "Ảnh đang lớn hơn 10MB. Vui lòng chọn ảnh nhẹ hơn.";
+    }
+
+    if (size < _minImageBytes) {
+      return "Ảnh quá nhỏ hoặc chất lượng quá thấp. Vui lòng chụp/chọn ảnh rõ hơn.";
+    }
+
+    return null;
+  }
+
+  Future<void> _startRecognition() async {
+    final image = _image;
+    if (image == null || isLoading) return;
+
+    final validationMessage = await _validateImage(image);
+    if (!mounted) return;
+
+    if (validationMessage != null) {
+      setState(() => _imageValidationMessage = validationMessage);
+      _showSnackBar(validationMessage);
+      return;
+    }
+
+    setState(() {
+      _imageValidationMessage = null;
+      isLoading = true;
+    });
+
+    await simulateAI();
+  }
+
+  void _clearImage() {
+    setState(() {
+      _image = null;
+      _imageValidationMessage = null;
+      isLoading = false;
+    });
   }
 
   @override
@@ -68,7 +133,7 @@ class _ScanScreenState extends State<ScanScreen> {
 
           // 📱 CONTENTS
           SafeArea(
-            child: Padding(
+            child: SingleChildScrollView(
               padding: EdgeInsets.fromLTRB(16, 20, 16, 20),
               child: Column(
                 children: [
@@ -90,13 +155,12 @@ class _ScanScreenState extends State<ScanScreen> {
                     ],
                   ),
 
-                  // 👉 ĐẨY XUỐNG
-                  Spacer(),
+                  SizedBox(height: _image == null ? 96 : 26),
 
                   // 📸 SCAN CARD
                   _scanCard(),
 
-                  SizedBox(height: 70),
+                  SizedBox(height: _image == null ? 70 : 24),
 
                   // 📘 GUIDE
                   _guideCard(),
@@ -118,8 +182,11 @@ class _ScanScreenState extends State<ScanScreen> {
 
   // 🤖 AI
   Future<void> simulateAI() async {
+    final image = _image;
+    if (image == null) return;
+
     try {
-      final result = await ApiService.predict(_image!);
+      final result = await ApiService.predict(image);
 
       if (!mounted) return;
 
@@ -272,49 +339,57 @@ class _ScanScreenState extends State<ScanScreen> {
               borderRadius: BorderRadius.circular(28),
               border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
             ),
-            child: Stack(
+            child: Column(
               children: [
-                // 📸 IMAGE BOX
-                Container(
-                  height: 180,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: const Color.fromARGB(77, 251, 250, 250),
-                    ),
-                  ),
-                  child: _image != null
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: Image.file(_image!, fit: BoxFit.cover),
-                        )
-                      : _emptyView(),
-                ),
-
-                // 🔄 LOADING OVERLAY
-                if (isLoading)
-                  Positioned.fill(
-                    child: Container(
+                Stack(
+                  children: [
+                    // 📸 IMAGE BOX
+                    Container(
+                      height: 180,
+                      width: double.infinity,
                       decoration: BoxDecoration(
-                        color: Colors.black.withValues(alpha: 0.5),
                         borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            CircularProgressIndicator(color: Colors.white),
-                            SizedBox(height: 10),
-                            Text(
-                              "Đang nhận diện...",
-                              style: TextStyle(color: Colors.white70),
-                            ),
-                          ],
+                        border: Border.all(
+                          color: const Color.fromARGB(77, 251, 250, 250),
                         ),
                       ),
+                      child: _image != null
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.file(_image!, fit: BoxFit.cover),
+                            )
+                          : _emptyView(),
                     ),
-                  ),
+
+                    // 🔄 LOADING OVERLAY
+                    if (isLoading)
+                      Positioned.fill(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.5),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CircularProgressIndicator(color: Colors.white),
+                                SizedBox(height: 10),
+                                Text(
+                                  "Đang nhận diện...",
+                                  style: TextStyle(color: Colors.white70),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                if (_image != null) ...[
+                  const SizedBox(height: 12),
+                  _imageQualityStatus(),
+                ],
               ],
             ),
           ),
@@ -356,13 +431,47 @@ class _ScanScreenState extends State<ScanScreen> {
   }
 
   Widget _buttons() {
+    if (_image != null) {
+      return Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: _outlineButton(
+                  "Chụp lại",
+                  Icons.camera_alt,
+                  isLoading ? null : () => pickImage(ImageSource.camera),
+                ),
+              ),
+              SizedBox(width: 12),
+              Expanded(
+                child: _outlineButton(
+                  "Ảnh khác",
+                  Icons.photo_library,
+                  isLoading ? null : () => pickImage(ImageSource.gallery),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 12),
+          _gradientButton(
+            "Dùng ảnh này để nhận diện",
+            Icons.auto_awesome,
+            _imageValidationMessage == null && !isLoading
+                ? _startRecognition
+                : null,
+          ),
+        ],
+      );
+    }
+
     return Row(
       children: [
         Expanded(
           child: _gradientButton(
             "Chụp ảnh",
             Icons.camera_alt,
-            () => pickImage(ImageSource.camera),
+            isLoading ? null : () => pickImage(ImageSource.camera),
           ),
         ),
         SizedBox(width: 12),
@@ -370,7 +479,7 @@ class _ScanScreenState extends State<ScanScreen> {
           child: _gradientButton(
             "Thư viện",
             Icons.photo,
-            () => pickImage(ImageSource.gallery),
+            isLoading ? null : () => pickImage(ImageSource.gallery),
           ),
         ),
       ],
@@ -413,6 +522,46 @@ class _ScanScreenState extends State<ScanScreen> {
     );
   }
 
+  Widget _imageQualityStatus() {
+    final isValid = _imageValidationMessage == null;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.9),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            isValid ? Icons.verified : Icons.error_outline,
+            color: isValid ? const Color(0xFF2FAE66) : Colors.orange,
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              isValid
+                  ? "Ảnh đạt kiểm tra cơ bản. Hãy xác nhận nếu ảnh đủ sáng, rõ nét và lấy trọn địa điểm."
+                  : _imageValidationMessage!,
+              style: TextStyle(
+                color: isValid ? Colors.black87 : Colors.black87,
+                height: 1.3,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          if (!isLoading)
+            IconButton(
+              tooltip: "Bỏ ảnh",
+              onPressed: _clearImage,
+              icon: const Icon(Icons.close),
+            ),
+        ],
+      ),
+    );
+  }
+
   Widget _guide(String icon, String text) {
     return Padding(
       padding: EdgeInsets.only(bottom: 6),
@@ -449,13 +598,16 @@ class _ScanScreenState extends State<ScanScreen> {
     );
   }
 
-  Widget _gradientButton(String text, IconData icon, VoidCallback onTap) {
+  Widget _gradientButton(String text, IconData icon, VoidCallback? onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        width: double.infinity,
         padding: EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          gradient: primaryGradient,
+          gradient: onTap == null
+              ? LinearGradient(colors: [Colors.grey.shade400, Colors.grey])
+              : primaryGradient,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
@@ -485,6 +637,28 @@ class _ScanScreenState extends State<ScanScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _outlineButton(String text, IconData icon, VoidCallback? onTap) {
+    return OutlinedButton.icon(
+      style: OutlinedButton.styleFrom(
+        foregroundColor: Colors.white,
+        disabledForegroundColor: Colors.white54,
+        side: BorderSide(color: Colors.white.withValues(alpha: 0.65)),
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+      ),
+      onPressed: onTap,
+      icon: Icon(icon),
+      label: Text(text, style: const TextStyle(fontWeight: FontWeight.bold)),
+    );
+  }
+
+  void _showSnackBar(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), behavior: SnackBarBehavior.floating),
     );
   }
 }

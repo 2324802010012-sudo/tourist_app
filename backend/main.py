@@ -18,6 +18,7 @@ LOCATIONS_PATH = BASE_DIR / "config" / "locations.json"
 LABELS_PATH = BASE_DIR / "config" / "labels.json"
 IMG_SIZE = 224
 CONFIDENCE_THRESHOLD = 0.7
+MAX_UPLOAD_BYTES = 10 * 1024 * 1024
 
 app = FastAPI(title="Tourism AI Backend", version="1.1.0-new-labels")
 app.add_middleware(
@@ -157,7 +158,15 @@ def get_location(location_id: str) -> dict[str, Any]:
 async def predict(file: UploadFile = File(...)) -> dict[str, Any]:
     if model is None:
         raise HTTPException(status_code=503, detail="Model chưa được train hoặc chưa đặt vào thư mục models/")
+    if file.content_type and not file.content_type.startswith("image/"):
+        raise HTTPException(status_code=400, detail="File gửi lên phải là ảnh")
+
     content = await file.read()
+    if not content:
+        raise HTTPException(status_code=400, detail="Ảnh gửi lên đang rỗng")
+    if len(content) > MAX_UPLOAD_BYTES:
+        raise HTTPException(status_code=413, detail="Ảnh gửi lên vượt quá 10MB")
+
     batch = image_to_batch(content)
     preds = model.predict(batch, verbose=0)[0]
     top_idx = np.argsort(preds)[::-1][:3]

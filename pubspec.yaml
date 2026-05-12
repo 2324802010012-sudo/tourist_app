@@ -15,13 +15,13 @@ dependencies:
 
   # 🌐 API + xử lý ảnh
   http: ^1.2.1
+  http_parser: ^4.0.2
   image_picker: ^1.0.7
   video_player: ^2.8.2
 
   # 🔥 FIREBASE
   firebase_core: ^2.27.0
   firebase_auth: ^4.17.4
-  cloud_firestore: ^4.15.4
   shared_preferences: ^2.5.5
   url_launcher: ^6.3.2
 
@@ -41,8 +41,6 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/data/labels.json
     - assets/data/locations.json
-    - assets/data/predict_success_example.json
     - assets/videos/
     - assets/images/
