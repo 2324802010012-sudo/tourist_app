@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/location_model.dart';
+import 'api_service.dart';
 
 class FeedbackService {
   static const String key = "recognition_feedback";
@@ -15,6 +16,16 @@ class FeedbackService {
     String? correctedLabel,
     String? note,
   }) async {
+    final remote = await ApiService.submitFeedback(
+      firebaseUid: userId,
+      predictedLabel: location.predictedLabel,
+      verdict: verdict,
+      historyId: location.historyId,
+      correctedLabel: correctedLabel,
+      feedbackContent: note?.trim(),
+    );
+    if (remote != null) return;
+
     final prefs = await SharedPreferences.getInstance();
     final data = prefs.getStringList(key) ?? [];
     final resultKey = [

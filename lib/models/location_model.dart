@@ -65,6 +65,7 @@ class Location {
   final List<String> relatedLocations;
   final double confidence;
   final List<PredictionCandidate> topMatches;
+  final int? historyId;
   final DateTime? recognizedAt;
 
   Location({
@@ -88,6 +89,7 @@ class Location {
     required this.relatedLocations,
     this.confidence = 0,
     this.topMatches = const [],
+    this.historyId,
     this.recognizedAt,
   });
 
@@ -124,6 +126,7 @@ class Location {
       relatedLocations: _stringList(source['related_locations']),
       confidence: _doubleValue(source['confidence']),
       topMatches: _predictionList(source['top3'] ?? source['top_matches']),
+      historyId: _nullableIntValue(source['history_id']),
       recognizedAt: _dateValue(source['recognized_at']),
     );
   }
@@ -133,6 +136,7 @@ class Location {
   Location copyWith({
     double? confidence,
     List<PredictionCandidate>? topMatches,
+    int? historyId,
     DateTime? recognizedAt,
   }) {
     return Location(
@@ -156,6 +160,7 @@ class Location {
       relatedLocations: relatedLocations,
       confidence: confidence ?? this.confidence,
       topMatches: topMatches ?? this.topMatches,
+      historyId: historyId ?? this.historyId,
       recognizedAt: recognizedAt ?? this.recognizedAt,
     );
   }
@@ -184,6 +189,7 @@ class Location {
             .toList(),
       'related_locations': relatedLocations,
       'confidence': confidence,
+      if (historyId != null) 'history_id': historyId,
       'top3': topMatches
           .map(
             (item) => {
@@ -211,6 +217,12 @@ int _intValue(Object? value) {
   if (value is int) return value;
   if (value is num) return value.toInt();
   return int.tryParse(value?.toString() ?? '') ?? 0;
+}
+
+int? _nullableIntValue(Object? value) {
+  if (value == null) return null;
+  final parsed = _intValue(value);
+  return parsed == 0 ? null : parsed;
 }
 
 double _doubleValue(Object? value) {

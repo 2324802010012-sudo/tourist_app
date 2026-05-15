@@ -1,9 +1,17 @@
 import 'dart:convert';
+
 import 'package:flutter/services.dart';
+
 import '../models/location_model.dart';
+import 'api_service.dart';
 
 class LocationService {
   static Future<List<Map<String, dynamic>>> loadLocationMaps() async {
+    final remote = await ApiService.getLocations();
+    if (remote != null && remote.isNotEmpty) {
+      return remote;
+    }
+
     final data = await rootBundle.loadString('assets/data/locations.json');
     final jsonResult = json.decode(data);
 
@@ -14,7 +22,6 @@ class LocationService {
 
   static Future<List<Location>> loadLocations() async {
     final items = await loadLocationMaps();
-
     return items.map(Location.fromJson).toList();
   }
 

@@ -33,8 +33,41 @@
 * FastAPI (Backend)
 * TensorFlow / Keras (Model AI)
 * Firebase Auth
+* MySQL (CSDL quan hệ cho backend)
 * Shared Preferences
 * url_launcher
+
+---
+
+# Cơ sở dữ liệu
+
+Backend dùng MySQL và seed dữ liệu ban đầu từ `config/locations.json` khi khởi động.
+
+Các biến môi trường backend dùng để kết nối MySQL:
+
+```powershell
+$env:MYSQL_HOST="127.0.0.1"
+$env:MYSQL_PORT="3306"
+$env:MYSQL_USER="root"
+$env:MYSQL_PASSWORD="mat_khau_mysql"
+$env:MYSQL_DATABASE="tourist_app"
+```
+
+Khi chạy lần đầu, backend sẽ tự tạo database `tourist_app` nếu tài khoản MySQL có quyền `CREATE DATABASE`. Nếu tài khoản không có quyền đó, hãy tạo database thủ công trước rồi giữ nguyên các biến môi trường trên.
+
+Các bảng đã được tích hợp theo thiết kế CSDL:
+
+* `users`, `user_preferences`
+* `tourist_places`, `place_images`, `place_videos`, `travel_advices`, `nearby_services`
+* `ai_models`
+* `recognition_histories`, `recognition_candidates`, `favorite_places`, `recognition_feedbacks`
+
+Những luồng đã dùng DB:
+
+* đồng bộ tài khoản Firebase vào bảng `users`
+* lấy địa điểm từ backend thay cho chỉ đọc JSON cục bộ
+* lưu sở thích du lịch, yêu thích, lịch sử nhận dạng và phản hồi người dùng
+* lưu top-3 candidate cho mỗi lần nhận dạng đã ghi lịch sử
 
 ---
 
@@ -55,6 +88,7 @@ assets/         # Ảnh, tài nguyên
 
 * Python 3.9+
 * pip
+* MySQL Server 8.x hoặc MariaDB tương thích MySQL
 
 ## 🔹 Mobile
 
@@ -80,9 +114,19 @@ cd tourist_app
 pip install -r backend\requirements_backend.txt
 ```
 
+## 3. Cấu hình MySQL
+
+```powershell
+$env:MYSQL_HOST="127.0.0.1"
+$env:MYSQL_PORT="3306"
+$env:MYSQL_USER="root"
+$env:MYSQL_PASSWORD="mat_khau_mysql"
+$env:MYSQL_DATABASE="tourist_app"
+```
+
 ---
 
-## 3. Cài thư viện Flutter
+## 4. Cài thư viện Flutter
 
 ```bash
 flutter pub get
@@ -201,7 +245,7 @@ Luồng demo đề xuất:
 
 ## ❌ Không load được model
 
-👉 Kiểm tra đường dẫn trong `backend/api.py`
+👉 Kiểm tra đường dẫn trong `backend/main.py`
 
 ---
 

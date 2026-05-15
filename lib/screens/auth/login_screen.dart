@@ -3,6 +3,8 @@ import 'register_screen.dart';
 import '../../main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../services/api_service.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -217,6 +219,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   );
 
                               await FirebaseAuth.instance.currentUser!.reload();
+                              await ApiService.syncCurrentUser();
 
                               if (!context.mounted) return;
 

@@ -32,6 +32,7 @@ migrate_working_dir/
 .pub/
 /build/
 /coverage/
+/.tmp_docx_media/
 
 # Symbolication related
 app.*.symbols

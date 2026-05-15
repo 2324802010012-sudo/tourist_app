@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../services/api_service.dart';
+
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -58,6 +60,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       // 👉 cập nhật tên
       await userCredential.user!.updateDisplayName(name);
+      await ApiService.syncCurrentUser();
 
       if (!mounted) return;
 

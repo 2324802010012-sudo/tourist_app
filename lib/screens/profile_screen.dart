@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../models/location_model.dart';
 import '../services/location_discovery_service.dart';
 import '../services/location_service.dart';
+import '../services/api_service.dart';
 import '../services/travel_preference_service.dart';
 import 'auth/welcome_screen.dart';
 import 'detail_screen.dart';
@@ -70,6 +71,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       await user.updateDisplayName(name);
       await user.reload();
+      await ApiService.syncCurrentUser();
       await TravelPreferenceService.save(selectedPreferences);
 
       if (!mounted) return;

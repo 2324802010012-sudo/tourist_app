@@ -222,13 +222,16 @@ class _FailResultScreenState extends State<FailResultScreen> {
                 recognizedAt: DateTime.now(),
               );
 
-              await HistoryService.addHistory(selectedLocation.toStorageJson());
+              final savedHistory = await HistoryService.addHistory(
+                selectedLocation.toStorageJson(),
+              );
               if (!context.mounted) return;
 
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => DetailScreen(data: selectedLocation),
+                  builder: (_) =>
+                      DetailScreen(data: Location.fromJson(savedHistory)),
                 ),
               );
             },

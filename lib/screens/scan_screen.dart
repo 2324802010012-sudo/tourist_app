@@ -225,14 +225,14 @@ class _ScanScreenState extends State<ScanScreen> {
       };
 
       setState(() => isLoading = false);
-      await HistoryService.addHistory(enrichedPlace);
+      final savedHistory = await HistoryService.addHistory(enrichedPlace);
 
       if (!mounted) return;
 
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => DetailScreen(data: Location.fromJson(enrichedPlace)),
+          builder: (_) => DetailScreen(data: Location.fromJson(savedHistory)),
         ),
       );
     } catch (e) {
