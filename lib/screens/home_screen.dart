@@ -104,6 +104,17 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
   }
 
+  void _submitSearch(String value) {
+    final results = _visibleLocations;
+    if (results.isEmpty) return;
+    _openSearchResult(results.first);
+  }
+
+  void _openSearchResult(Location location) {
+    FocusScope.of(context).unfocus();
+    _openLocation(location);
+  }
+
   void _openLocation(Location location) {
     Navigator.push(
       context,
@@ -322,6 +333,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         _heroBanner(),
                         const SizedBox(height: 14),
                         _searchBar(),
+                        if (searchController.text.trim().isNotEmpty) ...[
+                          const SizedBox(height: 8),
+                          _searchSuggestions(),
+                        ],
                         const SizedBox(height: 12),
                         _quickActions(),
                         const SizedBox(height: 14),
@@ -388,6 +403,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return TextField(
       controller: searchController,
       onChanged: _search,
+      onSubmitted: _submitSearch,
       textInputAction: TextInputAction.search,
       decoration: InputDecoration(
         hintText: "Tìm địa điểm, tỉnh thành, trải nghiệm...",
@@ -417,6 +433,100 @@ class _HomeScreenState extends State<HomeScreen> {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide.none,
+        ),
+      ),
+    );
+  }
+
+  Widget _searchSuggestions() {
+    final suggestions = _visibleLocations.take(5).toList();
+
+    return Container(
+      decoration: BoxDecoration(
+        color: _surface,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: _mutedBorder),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 18,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: suggestions.isEmpty
+          ? const Padding(
+              padding: EdgeInsets.all(14),
+              child: Row(
+                children: [
+                  Icon(Icons.search_off, color: Colors.black38),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      "Không tìm thấy địa điểm phù hợp",
+                      style: TextStyle(color: Colors.black54),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (var index = 0; index < suggestions.length; index++) ...[
+                  _searchSuggestionTile(suggestions[index]),
+                  if (index != suggestions.length - 1)
+                    const Divider(height: 1, indent: 64),
+                ],
+              ],
+            ),
+    );
+  }
+
+  Widget _searchSuggestionTile(Location location) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(8),
+      onTap: () => _openSearchResult(location),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.asset(
+                location.thumbnail,
+                width: 44,
+                height: 44,
+                fit: BoxFit.cover,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    location.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontWeight: FontWeight.w800),
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    location.province,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.black54,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            const Icon(Icons.chevron_right, color: Colors.black38),
+          ],
         ),
       ),
     );

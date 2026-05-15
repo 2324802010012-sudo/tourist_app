@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -43,6 +45,8 @@ class _DetailScreenState extends State<DetailScreen> {
   bool isFav = false;
   bool isLoadingRelated = true;
   bool isVideoFailed = false;
+  bool isIntroExpanded = false;
+  List<String> imageAssets = [];
   List<Location> relatedLocations = [];
   List<Location> allLocations = [];
 
@@ -50,8 +54,30 @@ class _DetailScreenState extends State<DetailScreen> {
   void initState() {
     super.initState();
     _loadFavorite();
+    _loadImageAssets();
     _loadRelatedLocations();
     _setupVideo();
+  }
+
+  Future<void> _loadImageAssets() async {
+    try {
+      final manifest = await rootBundle.loadString('AssetManifest.json');
+      final decoded = json.decode(manifest);
+      if (decoded is! Map) return;
+
+      final assets = decoded.keys
+          .whereType<String>()
+          .where((path) => path.startsWith('assets/images/'))
+          .where((path) => RegExp(r'\.(jpg|jpeg|png|webp)$').hasMatch(path))
+          .toList()
+        ..sort();
+
+      if (mounted) {
+        setState(() => imageAssets = assets);
+      }
+    } catch (e) {
+      debugPrint("Image manifest load error: $e");
+    }
   }
 
   Future<void> _setupVideo() async {
@@ -106,9 +132,18 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   @override
+  void didUpdateWidget(covariant DetailScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.data.predictedLabel != widget.data.predictedLabel) {
+      isIntroExpanded = false;
+      currentIndex = 0;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final data = widget.data;
-    final gallery = <String>{data.thumbnail, ...?data.gallery}.toList();
+    final gallery = _displayGallery(data);
 
     return Scaffold(
       backgroundColor: softBg,
@@ -155,10 +190,7 @@ class _DetailScreenState extends State<DetailScreen> {
             const SizedBox(height: 20),
             _sectionTitle("Giới thiệu", Icons.menu_book),
             const SizedBox(height: 8),
-            Text(
-              data.description,
-              style: const TextStyle(fontSize: 15, height: 1.45),
-            ),
+            _introDescription(data.description),
             if (data.highlights.isNotEmpty) ...[
               const SizedBox(height: 18),
               _highlightChips(data.highlights),
@@ -196,9 +228,12 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   Widget _mediaViewer(List<String> gallery) {
+    if (gallery.isEmpty) return const SizedBox.shrink();
+
     final controller = _controller;
     final isVideoReady = controller != null && controller.value.isInitialized;
     final isPlaying = isVideoReady && controller.value.isPlaying;
+    final safeIndex = currentIndex.clamp(0, gallery.length - 1).toInt();
     final mediaText = isVideoFailed
         ? "Video chưa tải"
         : isVideoReady
@@ -218,7 +253,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 child: VideoPlayer(controller),
               )
             else
-              Image.asset(gallery[currentIndex], fit: BoxFit.cover),
+              Image.asset(gallery[safeIndex], fit: BoxFit.cover),
             DecoratedBox(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -785,6 +820,56 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
+  Widget _introDescription(String description) {
+    final shouldCollapse = description.trim().length > 180;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          description,
+          maxLines: shouldCollapse && !isIntroExpanded ? 6 : null,
+          overflow: shouldCollapse && !isIntroExpanded
+              ? TextOverflow.ellipsis
+              : TextOverflow.visible,
+          style: const TextStyle(fontSize: 15, height: 1.45),
+        ),
+        if (shouldCollapse) ...[
+          const SizedBox(height: 8),
+          InkWell(
+            borderRadius: BorderRadius.circular(8),
+            onTap: () {
+              setState(() => isIntroExpanded = !isIntroExpanded);
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    isIntroExpanded ? "Thu gọn" : "Xem thêm",
+                    style: const TextStyle(
+                      color: Color(0xFF1FAD62),
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Icon(
+                    isIntroExpanded
+                        ? Icons.keyboard_arrow_up
+                        : Icons.keyboard_arrow_down,
+                    size: 20,
+                    color: const Color(0xFF1FAD62),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
   Widget _highlightChips(List<String> highlights) {
     return Wrap(
       spacing: 8,
@@ -916,7 +1001,65 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
+  List<String> _displayGallery(Location data) {
+    final labelImages = imageAssets
+        .where((path) => _isLocationImage(path, data.predictedLabel))
+        .toList();
+
+    final candidateImages = _locationImageCandidates(data.predictedLabel);
+    final galleryImages = labelImages.length <= 1
+        ? candidateImages
+        : labelImages;
+
+    galleryImages.sort(
+      (a, b) => _imageSortKey(a, data).compareTo(_imageSortKey(b, data)),
+    );
+
+    final images = <String>{
+      if (data.thumbnail.isNotEmpty) data.thumbnail,
+      ...?data.gallery,
+      ...galleryImages,
+    };
+
+    return images.toList();
+  }
+
+  bool _isLocationImage(String path, String predictedLabel) {
+    final name = path.split('/').last.toLowerCase();
+    final label = predictedLabel.toLowerCase();
+    final extensionIndex = name.lastIndexOf('.');
+    if (extensionIndex <= 0 || !name.startsWith(label)) return false;
+
+    final suffix = name.substring(label.length, extensionIndex);
+    return suffix.isEmpty || RegExp(r'^_?\d+$').hasMatch(suffix);
+  }
+
+  List<String> _locationImageCandidates(String predictedLabel) {
+    final label = predictedLabel.toLowerCase();
+    final base = 'assets/images/$label';
+    final numberedSeparator = RegExp(r'\d$').hasMatch(label) ? '_' : '';
+
+    return [
+      '$base.jpg',
+      for (var index = 1; index <= 5; index++)
+        '$base$numberedSeparator$index.jpg',
+    ];
+  }
+
+  int _imageSortKey(String path, Location data) {
+    final name = path.split('/').last.toLowerCase();
+    final label = data.predictedLabel.toLowerCase();
+    final extensionIndex = name.lastIndexOf('.');
+    final suffix = name.substring(label.length, extensionIndex);
+    if (suffix.isEmpty) return 0;
+    return int.tryParse(suffix.replaceFirst('_', '')) ?? 999;
+  }
+
   Widget _gallerySection(List<String> gallery) {
+    if (gallery.isEmpty) return const SizedBox.shrink();
+
+    final safeIndex = currentIndex.clamp(0, gallery.length - 1).toInt();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -927,7 +1070,7 @@ class _DetailScreenState extends State<DetailScreen> {
           child: Stack(
             children: [
               Image.asset(
-                gallery[currentIndex],
+                gallery[safeIndex],
                 height: 220,
                 width: double.infinity,
                 fit: BoxFit.cover,
@@ -945,7 +1088,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    "${currentIndex + 1}/${gallery.length}",
+                    "${safeIndex + 1}/${gallery.length}",
                     style: const TextStyle(color: Colors.white, fontSize: 12),
                   ),
                 ),
@@ -993,7 +1136,7 @@ class _DetailScreenState extends State<DetailScreen> {
 
               return GestureDetector(
                 onTap: () => setState(() => currentIndex = index),
-                child: _thumb(gallery[index], isActive: currentIndex == index),
+                child: _thumb(gallery[index], isActive: safeIndex == index),
               );
             },
           ),
@@ -1315,10 +1458,11 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
-  void _showFeedbackSheet() {
+  Future<void> _showFeedbackSheet() async {
     if (!_requireLogin("gửi phản hồi kết quả nhận dạng")) return;
 
     final noteController = TextEditingController();
+    final noteFocusNode = FocusNode();
     var verdict = "correct";
     var correctedLabel = widget.data.predictedLabel;
     var isSaving = false;
@@ -1326,7 +1470,7 @@ class _DetailScreenState extends State<DetailScreen> {
         ? <Location>[widget.data]
         : allLocations;
 
-    showModalBottomSheet(
+    final sent = await showModalBottomSheet<bool>(
       context: context,
       showDragHandle: true,
       isScrollControlled: true,
@@ -1334,11 +1478,16 @@ class _DetailScreenState extends State<DetailScreen> {
         return StatefulBuilder(
           builder: (context, setSheetState) {
             Future<void> submit() async {
+              if (isSaving) return;
+
               final user = FirebaseAuth.instance.currentUser;
               if (user == null) {
-                Navigator.pop(sheetContext);
+                Navigator.of(sheetContext).pop(false);
                 return;
               }
+
+              FocusScope.of(context).unfocus();
+              final note = noteController.text;
 
               setSheetState(() => isSaving = true);
               try {
@@ -1348,13 +1497,11 @@ class _DetailScreenState extends State<DetailScreen> {
                   userId: user.uid,
                   userEmail: user.email,
                   correctedLabel: verdict == "wrong" ? correctedLabel : null,
-                  note: noteController.text,
+                  note: note,
                 );
 
-                if (!sheetContext.mounted) return;
-                Navigator.pop(sheetContext);
-                if (mounted) {
-                  _showSnackBar("Cảm ơn bạn, phản hồi đã được ghi nhận.");
+                if (sheetContext.mounted) {
+                  Navigator.of(sheetContext).pop(true);
                 }
               } catch (e) {
                 if (sheetContext.mounted) {
@@ -1439,6 +1586,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     const SizedBox(height: 14),
                     TextField(
                       controller: noteController,
+                      focusNode: noteFocusNode,
                       minLines: 2,
                       maxLines: 4,
                       decoration: const InputDecoration(
@@ -1477,7 +1625,16 @@ class _DetailScreenState extends State<DetailScreen> {
           },
         );
       },
-    ).whenComplete(noteController.dispose);
+    );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      noteFocusNode.dispose();
+      noteController.dispose();
+    });
+
+    if (sent == true && mounted) {
+      _showSnackBar("Cảm ơn bạn, phản hồi đã được ghi nhận.");
+    }
   }
 
   Future<void> _copyTravelInfo() async {

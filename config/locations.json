@@ -5,7 +5,7 @@
     "location_name": "Hồ Gươm",
     "province": "Hà Nội",
     "address": "Quận Hoàn Kiếm, Hà Nội",
-    "description": "Hồ Gươm là biểu tượng nổi tiếng của thủ đô Hà Nội, gắn với Tháp Rùa và không gian văn hóa lịch sử lâu đời.",
+    "description": "Hồ Gươm, hay còn gọi là Hồ Hoàn Kiếm, là một trong những biểu tượng văn hóa và lịch sử nổi bật nhất của Thủ đô Hà Nội. Nằm ở trung tâm thành phố, hồ gắn liền với đời sống tinh thần của người Hà Nội và là điểm đến quen thuộc của du khách khi khám phá khu phố cổ.\n\nTên gọi Hồ Hoàn Kiếm gắn với truyền thuyết vua Lê Lợi trả gươm báu cho Rùa thần sau khi đánh thắng quân Minh. Câu chuyện này đã trở thành một phần quan trọng trong ký ức văn hóa dân gian Việt Nam, thể hiện tinh thần yêu nước và khát vọng hòa bình của dân tộc.\n\nXung quanh hồ có nhiều công trình nổi tiếng như Tháp Rùa, đền Ngọc Sơn, cầu Thê Húc và tháp Bút. Những địa điểm này tạo nên một không gian văn hóa đặc trưng, kết hợp giữa cảnh quan thiên nhiên, kiến trúc truyền thống và dấu ấn lịch sử lâu đời.\n\nHồ Gươm là nơi thích hợp để đi bộ, chụp ảnh, tham quan di tích và cảm nhận nhịp sống Hà Nội. Vào cuối tuần, khu vực quanh hồ thường trở thành phố đi bộ, thu hút đông đảo người dân và du khách với các hoạt động văn hóa, nghệ thuật và giải trí ngoài trời.",
     "opening_hours": "Cả ngày",
     "ticket_price": "Miễn phí",
     "best_time": "Sáng sớm hoặc sau 17:00, đặc biệt cuối tuần khi phố đi bộ hoạt động.",
@@ -24,6 +24,13 @@
     ],
     "video_url": "videos/ho_guom.mp4",
     "thumbnail_url": "images/ho_guom.jpg",
+    "gallery": [
+       "images/ho_guom1.jpg",
+       "images/ho_guom2.jpg",
+       "images/ho_guom3.jpg",
+       "images/ho_guom4.jpg",
+       "images/ho_guom5.jpg"
+    ],
     "related_locations": [
       "van_mieu",
       "lang_bac"
@@ -35,7 +42,7 @@
     "location_name": "Văn Miếu",
     "province": "Hà Nội",
     "address": "Quận Đống Đa, Hà Nội",
-    "description": "Văn Miếu - Quốc Tử Giám là quần thể di tích lịch sử, văn hóa tiêu biểu, được xem là trường đại học đầu tiên của Việt Nam.",
+    "description": "Văn Miếu - Quốc Tử Giám là quần thể di tích lịch sử và văn hóa nổi tiếng tại Hà Nội, được xem là biểu tượng của truyền thống hiếu học Việt Nam. Đây là nơi thờ Khổng Tử, các bậc hiền triết Nho học và cũng là nơi gắn liền với nền giáo dục khoa cử thời phong kiến.\n\nVăn Miếu được xây dựng vào năm 1070 dưới thời vua Lý Thánh Tông. Đến năm 1076, Quốc Tử Giám được thành lập, trở thành trường đại học đầu tiên của Việt Nam. Trong nhiều thế kỷ, nơi đây là trung tâm đào tạo nhân tài cho đất nước, góp phần hình thành truyền thống học tập và trọng dụng tri thức của dân tộc.\n\nQuần thể di tích có kiến trúc cổ kính với các lớp cổng, sân vườn, hồ nước, nhà bia tiến sĩ và khu thờ tự trang nghiêm. Đặc biệt, hệ thống bia tiến sĩ đặt trên lưng rùa đá ghi danh những người đỗ đạt trong các kỳ thi thời phong kiến, thể hiện sự tôn vinh tri thức và đạo học.\n\nNgày nay, Văn Miếu - Quốc Tử Giám là điểm tham quan quan trọng của Hà Nội, thu hút học sinh, sinh viên, du khách và những người yêu thích lịch sử. Nhiều người đến đây để tìm hiểu văn hóa giáo dục truyền thống, chụp ảnh kỷ niệm và cầu mong may mắn trong học tập, thi cử.",
     "opening_hours": "Theo giờ tham quan",
     "ticket_price": "Có thu phí",
     "best_time": "Buổi sáng trong tuần để tránh đông và có ánh sáng đẹp.",
@@ -54,6 +61,13 @@
     ],
     "video_url": "videos/van_mieu.mp4",
     "thumbnail_url": "images/van_mieu.jpg",
+    "gallery": [
+       "images/van_mieu1.jpg",
+       "images/van_mieu2.jpg",
+       "images/van_mieu3.jpg",
+       "images/van_mieu4.jpg",
+       "images/van_mieu5.jpg"
+    ],
     "related_locations": [
       "ho_guom",
       "lang_bac"
@@ -65,7 +79,7 @@
     "location_name": "Lăng Bác",
     "province": "Hà Nội",
     "address": "Quảng trường Ba Đình, Hà Nội",
-    "description": "Lăng Bác là nơi an nghỉ của Chủ tịch Hồ Chí Minh, đồng thời là địa điểm lịch sử và chính trị đặc biệt quan trọng.",
+    "description": "Lăng Chủ tịch Hồ Chí Minh, thường được gọi là Lăng Bác, là công trình có ý nghĩa đặc biệt quan trọng tại Quảng trường Ba Đình, Hà Nội. Đây là nơi lưu giữ thi hài Chủ tịch Hồ Chí Minh, vị lãnh tụ kính yêu của dân tộc Việt Nam, đồng thời là địa điểm tham quan mang giá trị lịch sử, chính trị và văn hóa sâu sắc.\n\nCông trình được xây dựng tại khu vực Quảng trường Ba Đình, nơi Chủ tịch Hồ Chí Minh đọc bản Tuyên ngôn Độc lập vào ngày 2 tháng 9 năm 1945, khai sinh nước Việt Nam Dân chủ Cộng hòa. Vì vậy, không gian này gắn liền với một trong những mốc son quan trọng nhất của lịch sử Việt Nam hiện đại.\n\nKiến trúc Lăng Bác mang vẻ trang nghiêm, vững chãi với các khối đá lớn, đường nét cân đối và không gian rộng mở. Xung quanh lăng là khu di tích Phủ Chủ tịch, ao cá Bác Hồ, nhà sàn Bác Hồ, chùa Một Cột và Bảo tàng Hồ Chí Minh, tạo thành một quần thể tham quan có giá trị giáo dục cao.\n\nKhi đến Lăng Bác, du khách cần ăn mặc lịch sự, giữ trật tự và tuân thủ quy định tham quan. Đây là điểm đến phù hợp cho những ai muốn tìm hiểu về cuộc đời Chủ tịch Hồ Chí Minh, lịch sử Việt Nam hiện đại và không gian văn hóa trang nghiêm của Thủ đô Hà Nội.",
     "opening_hours": "Theo khung giờ tham quan",
     "ticket_price": "Miễn phí hoặc theo quy định tham quan",
     "best_time": "Sáng sớm theo lịch mở cửa chính thức, nên kiểm tra lịch trước khi đi.",
@@ -84,6 +98,13 @@
     ],
     "video_url": "videos/lang_bac.mp4",
     "thumbnail_url": "images/lang_bac.jpg",
+    "gallery": [
+       "images/lang_bac1.jpg",
+       "images/lang_bac2.jpg",
+       "images/lang_bac3.jpg",
+       "images/lang_bac4.jpg",
+       "images/lang_bac5.jpg"
+    ],
     "related_locations": [
       "ho_guom",
       "van_mieu"
@@ -95,7 +116,7 @@
     "location_name": "Vịnh Hạ Long",
     "province": "Quảng Ninh",
     "address": "Thành phố Hạ Long, Quảng Ninh",
-    "description": "Vịnh Hạ Long là di sản thiên nhiên nổi tiếng với hàng nghìn đảo đá vôi và cảnh quan biển đặc sắc.",
+    "description": "Vịnh Hạ Long là danh thắng nổi tiếng của tỉnh Quảng Ninh, được biết đến với hàng nghìn đảo đá vôi lớn nhỏ nhô lên giữa làn nước xanh. Cảnh quan kỳ vĩ của vịnh tạo nên một bức tranh thiên nhiên độc đáo, là một trong những biểu tượng du lịch nổi bật nhất của Việt Nam.\n\nTên gọi Hạ Long gắn với truyền thuyết rồng mẹ và đàn rồng con đáp xuống vùng biển để giúp người Việt chống giặc ngoại xâm. Những viên ngọc rồng hóa thành các đảo đá, tạo nên khung cảnh hùng vĩ và huyền thoại như ngày nay.\n\nVịnh Hạ Long có giá trị đặc biệt về địa chất, địa mạo và cảnh quan thiên nhiên. Các đảo đá vôi, hang động, bãi tắm và làng chài tạo nên hệ sinh thái du lịch phong phú. Một số điểm tham quan nổi tiếng có thể kể đến như hang Sửng Sốt, động Thiên Cung, đảo Titop, hòn Trống Mái và khu vực làng chài trên vịnh.\n\nDu khách đến Vịnh Hạ Long có thể đi du thuyền, chèo kayak, tham quan hang động, tắm biển, ngắm hoàng hôn và thưởng thức hải sản. Đây là địa điểm phù hợp cho nghỉ dưỡng, khám phá thiên nhiên và trải nghiệm du lịch biển đảo đặc trưng của miền Bắc Việt Nam.",
     "opening_hours": "Theo tuyến tham quan",
     "ticket_price": "Có thu phí",
     "best_time": "Tháng 10 đến tháng 4 hoặc sáng sớm khi thời tiết mát và biển êm.",
@@ -114,6 +135,13 @@
     ],
     "video_url": "videos/vinh_ha_long.mp4",
     "thumbnail_url": "images/vinh_ha_long.jpg",
+    "gallery": [
+      "images/vinh_ha_long1.jpg",
+      "images/vinh_ha_long2.jpg",
+      "images/vinh_ha_long3.jpg",
+      "images/vinh_ha_long4.jpg",
+      "images/vinh_ha_long5.jpg"
+    ],
     "related_locations": [
       "trang_an",
       "ba_na_hills"
@@ -125,7 +153,7 @@
     "location_name": "Tràng An",
     "province": "Ninh Bình",
     "address": "Huyện Hoa Lư, Ninh Bình",
-    "description": "Tràng An nổi bật với hệ thống núi đá vôi, hang động và các tuyến du lịch sinh thái bằng thuyền.",
+    "description":  "Tràng An nổi bật với hệ thống núi đá vôi, hang động và các tuyến du lịch sinh thái bằng thuyền.\n\nTràng An là một danh lam thắng cảnh nổi tiếng của tỉnh Ninh Bình, nằm gần khu vực cố đô Hoa Lư. Nơi đây được biết đến với cảnh quan núi đá vôi hùng vĩ, hệ thống sông nước uốn lượn và các hang động tự nhiên kỳ ảo. Ngày 23 tháng 6 năm 2014, Quần thể Danh lam thắng cảnh Tràng An được UNESCO công nhận là Di sản Văn hóa và Thiên nhiên Thế giới.\n\nQuần thể danh thắng Tràng An bao gồm nhiều khu vực quan trọng như cố đô Hoa Lư, Tam Cốc - Bích Động và khu du lịch sinh thái Tràng An. Các khu vực này được kết nối với nhau bởi hệ thống núi đá vôi, rừng đặc dụng, sông, hồ và thung lũng ngập nước. Nhờ vị trí đặc biệt, Tràng An không chỉ có giá trị về cảnh quan thiên nhiên mà còn gắn liền với lịch sử hình thành và phát triển của vùng đất cố đô.\n\nVào thời Đinh - Tiền Lê, vùng Hoa Lư gần Tràng An từng là trung tâm chính trị, quân sự và văn hóa quan trọng của nước Đại Cồ Việt. Địa hình núi non hiểm trở, sông nước bao quanh đã tạo nên thế phòng thủ tự nhiên vững chắc. Ngày nay, du khách đến Tràng An có thể đi thuyền qua các hang động xuyên núi, chiêm ngưỡng cảnh quan sơn thủy hữu tình và tham quan các di tích như đền Trình, đền Trần, phủ Khống.\n\nBên cạnh giá trị lịch sử, Tràng An còn có hệ sinh thái đa dạng với hệ sinh thái núi đá vôi và hệ sinh thái thủy sinh. Khu vực này có nhiều loài thực vật, động vật quý hiếm, góp phần tạo nên giá trị sinh học đặc biệt cho quần thể di sản. Đây là điểm đến phù hợp cho du khách yêu thích thiên nhiên, lịch sử, văn hóa tâm linh và trải nghiệm du lịch sinh thái độc đáo.",
     "opening_hours": "Theo giờ tham quan",
     "ticket_price": "Có thu phí",
     "best_time": "Sáng sớm hoặc sau 15:00 để đi thuyền dễ chịu hơn.",
@@ -144,6 +172,13 @@
     ],
     "video_url": "videos/trang_an.mp4",
     "thumbnail_url": "images/trang_an.jpg",
+    "gallery": [
+      "images/trang_an1.jpg",
+      "images/trang_an2.jpg",
+      "images/trang_an3.jpg",
+      "images/trang_an4.jpg",
+      "images/trang_an5.jpg"
+    ],
     "related_locations": [
       "vinh_ha_long",
       "pho_co_hoi_an"
@@ -155,7 +190,7 @@
     "location_name": "Phố cổ Hội An",
     "province": "Quảng Nam",
     "address": "Thành phố Hội An, Quảng Nam",
-    "description": "Phố cổ Hội An là điểm đến nổi bật với kiến trúc cổ, đèn lồng và không gian văn hóa truyền thống đặc sắc.",
+    "description": "Phố cổ Hội An là một đô thị cổ nổi tiếng nằm bên dòng sông Hoài, thuộc tỉnh Quảng Nam. Nơi đây được biết đến với những ngôi nhà cổ mái ngói rêu phong, các con phố nhỏ, đèn lồng rực rỡ và không gian văn hóa giao thoa giữa Việt Nam, Trung Hoa, Nhật Bản và phương Tây.\n\nTrong lịch sử, Hội An từng là một thương cảng quốc tế sầm uất từ khoảng thế kỷ XVI đến thế kỷ XIX. Các thương nhân từ nhiều quốc gia đã đến đây buôn bán, sinh sống và để lại dấu ấn trong kiến trúc, tín ngưỡng, ẩm thực và phong tục địa phương.\n\nPhố cổ Hội An nổi bật với nhiều công trình có giá trị như Chùa Cầu, hội quán Phúc Kiến, nhà cổ Tấn Ký, các đình, chùa, giếng cổ và những dãy phố buôn bán truyền thống. Không gian đô thị được bảo tồn khá nguyên vẹn, giúp du khách cảm nhận rõ nét đời sống của một thương cảng xưa.\n\nNgày nay, Hội An là điểm đến lý tưởng cho du khách yêu thích văn hóa, lịch sử, ẩm thực và chụp ảnh. Vào buổi tối, phố cổ trở nên lung linh với ánh đèn lồng, các hoạt động thả hoa đăng, đi thuyền trên sông Hoài và thưởng thức những món đặc sản như cao lầu, mì Quảng, bánh mì Hội An.",
     "opening_hours": "Cả ngày hoặc theo khu vực tham quan",
     "ticket_price": "Có khu vực thu phí",
     "best_time": "Chiều muộn đến tối khi đèn lồng lên màu đẹp nhất.",
@@ -174,6 +209,13 @@
     ],
     "video_url": "videos/pho_co_hoi_an.mp4",
     "thumbnail_url": "images/pho_co_hoi_an.jpg",
+    "gallery": [
+      "images/pho_co_hoi_an1.jpg",
+      "images/pho_co_hoi_an2.jpg",
+      "images/pho_co_hoi_an3.jpg",
+      "images/pho_co_hoi_an4.jpg",
+      "images/pho_co_hoi_an5.jpg"
+    ],
     "related_locations": [
       "ba_na_hills",
       "cau_vang"
@@ -185,7 +227,7 @@
     "location_name": "Bà Nà Hills",
     "province": "Đà Nẵng",
     "address": "Huyện Hòa Vang, Đà Nẵng",
-    "description": "Bà Nà Hills là khu du lịch nổi tiếng với cáp treo, làng Pháp và nhiều công trình tham quan trên núi.",
+    "description": "Bà Nà Hills là khu du lịch nổi tiếng nằm trên dãy núi Chúa, thuộc thành phố Đà Nẵng. Nơi đây được biết đến với khí hậu mát mẻ quanh năm, cảnh quan núi rừng hùng vĩ và hệ thống công trình du lịch mang phong cách châu Âu độc đáo.\n\nTrong lịch sử, Bà Nà từng được người Pháp phát hiện và khai thác như một khu nghỉ dưỡng trên núi vào đầu thế kỷ XX. Với độ cao hơn 1.400 mét so với mực nước biển, khu vực này có khí hậu trong lành, phù hợp để nghỉ dưỡng, tránh nóng và ngắm cảnh thiên nhiên.\n\nNgày nay, Bà Nà Hills trở thành một trong những điểm đến nổi bật của miền Trung với tuyến cáp treo dài, Làng Pháp, vườn hoa, hầm rượu cổ và nhiều khu vui chơi giải trí. Đặc biệt, Cầu Vàng với đôi bàn tay khổng lồ đã trở thành biểu tượng du lịch nổi tiếng, thu hút đông đảo du khách trong và ngoài nước.\n\nBà Nà Hills phù hợp với du khách yêu thích chụp ảnh, tham quan kiến trúc, vui chơi giải trí và trải nghiệm không khí se lạnh giữa vùng núi Đà Nẵng. Khi đến đây, du khách nên chuẩn bị áo khoác nhẹ, giày đi bộ thoải mái và sắp xếp thời gian tham quan từ sáng để trải nghiệm được nhiều khu vực.",
     "opening_hours": "8:00 - 22:00",
     "ticket_price": "550.000-1200.000đ",
     "best_time": "Sáng sớm trong ngày nắng nhẹ để có nhiều thời gian tham quan.",
@@ -204,6 +246,13 @@
     ],
     "video_url": "videos/ba_na_hills.mp4",
     "thumbnail_url": "images/ba_na_hills.jpg",
+    "gallery": [
+      "images/ba_na_hills1.jpg",
+      "images/ba_na_hills2.jpg",
+      "images/ba_na_hills3.jpg",
+      "images/ba_na_hills4.jpg",
+      "images/ba_na_hills5.jpg"
+    ],
     "related_locations": [
       "cau_vang",
       "pho_co_hoi_an"
@@ -215,7 +264,7 @@
     "location_name": "Cầu Vàng",
     "province": "Đà Nẵng",
     "address": "Khu du lịch Bà Nà Hills, Đà Nẵng",
-    "description": "Cầu Vàng là công trình nổi bật với thiết kế độc đáo được nâng đỡ bởi đôi bàn tay khổng lồ giữa không gian núi cao.",
+    "description": "Cầu Vàng là công trình kiến trúc nổi tiếng thuộc khu du lịch Bà Nà Hills, Đà Nẵng. Cây cầu gây ấn tượng mạnh với hình ảnh đôi bàn tay khổng lồ nâng đỡ lối đi uốn cong giữa không gian núi rừng, tạo nên khung cảnh vừa hùng vĩ vừa độc đáo.\n\nCầu Vàng được đưa vào khai thác du lịch vào năm 2018 và nhanh chóng trở thành một trong những biểu tượng mới của du lịch Đà Nẵng. Công trình không chỉ là điểm check-in nổi tiếng mà còn thể hiện sự kết hợp giữa kiến trúc hiện đại, cảnh quan thiên nhiên và yếu tố nghệ thuật thị giác.\n\nTừ trên cầu, du khách có thể ngắm nhìn toàn cảnh núi Chúa, mây trời và rừng cây xanh bao quanh. Vào những ngày thời tiết đẹp, khung cảnh tại đây rất thích hợp để chụp ảnh, quay video và tận hưởng không khí mát mẻ của vùng núi cao.\n\nCầu Vàng phù hợp với du khách yêu thích kiến trúc, phong cảnh và trải nghiệm tham quan nhẹ nhàng. Thời điểm lý tưởng để đến đây là buổi sáng hoặc chiều muộn, khi ánh sáng đẹp hơn và lượng khách không quá đông. Du khách nên chuẩn bị máy ảnh, điện thoại đầy pin và áo khoác nhẹ vì thời tiết trên Bà Nà có thể thay đổi nhanh.",
     "opening_hours": "8:00 - 18:30",
     "ticket_price": "350.000-450.000đ",
     "best_time": "Sáng sớm hoặc lúc trời quang để nhìn rõ cảnh núi.",
@@ -252,7 +301,7 @@
     "location_name": "Chợ Bến Thành",
     "province": "TP. Hồ Chí Minh",
     "address": "Quận 1, TP. Hồ Chí Minh",
-    "description": "Chợ Bến Thành là một trong những biểu tượng lâu đời của TP. Hồ Chí Minh, nổi bật với kiến trúc đặc trưng và hoạt động mua bán sôi động.",
+    "description": "Chợ Bến Thành là một trong những biểu tượng lâu đời và nổi tiếng nhất của Thành phố Hồ Chí Minh. Nằm ở khu vực trung tâm Quận 1, chợ không chỉ là nơi mua bán sầm uất mà còn là điểm tham quan văn hóa, lịch sử quen thuộc đối với du khách trong và ngoài nước.\n\nLịch sử chợ Bến Thành gắn liền với quá trình hình thành và phát triển của Sài Gòn. Khu chợ ban đầu xuất hiện từ rất sớm, gần khu vực bến sông nơi người dân giao thương hàng hóa. Sau nhiều lần thay đổi vị trí và xây dựng lại, công trình chợ hiện nay trở thành một dấu ấn kiến trúc quan trọng của đô thị Sài Gòn xưa.\n\nChợ Bến Thành nổi bật với tháp đồng hồ ở cổng chính, các gian hàng phong phú và không khí mua bán nhộn nhịp. Du khách có thể tìm thấy nhiều mặt hàng như quần áo, đồ lưu niệm, thủ công mỹ nghệ, vải vóc, gia vị, cà phê và đặc sản địa phương.\n\nNgoài mua sắm, chợ còn là nơi lý tưởng để trải nghiệm ẩm thực Sài Gòn với các món như bún, phở, bánh xèo, chè, cơm tấm và nhiều món ăn đường phố khác. Đây là điểm đến phù hợp cho du khách muốn tìm hiểu đời sống đô thị, văn hóa giao thương và hương vị đặc trưng của Thành phố Hồ Chí Minh.",
     "opening_hours": "Theo giờ hoạt động chợ",
     "ticket_price": "Miễn phí vào cổng",
     "best_time": "Sáng đến đầu giờ chiều để mua sắm, tối để trải nghiệm ẩm thực quanh chợ.",
@@ -271,6 +320,13 @@
     ],
     "video_url": "videos/cho_ben_thanh.mp4",
     "thumbnail_url": "images/cho_ben_thanh.jpg",
+    "gallery": [
+       "images/cho_ben_thanh1.jpg",
+       "images/cho_ben_thanh2.jpg",
+       "images/cho_ben_thanh3.jpg",
+       "images/cho_ben_thanh4.jpg",
+       "images/cho_ben_thanh5.jpg"
+    ],
     "related_locations": [
       "nha_tho_duc_ba",
       "dinh_doc_lap"
@@ -282,7 +338,7 @@
     "location_name": "Nhà thờ Đức Bà Sài Gòn",
     "province": "TP. Hồ Chí Minh",
     "address": "Quận 1, TP. Hồ Chí Minh",
-    "description": "Nhà thờ Đức Bà Sài Gòn là công trình kiến trúc tôn giáo nổi bật mang phong cách châu Âu, nằm ở trung tâm thành phố.",
+    "description": "Nhà thờ Đức Bà Sài Gòn là một công trình kiến trúc tôn giáo nổi tiếng nằm tại trung tâm Quận 1, Thành phố Hồ Chí Minh. Với hai tháp chuông cao, mặt tiền bằng gạch đỏ và phong cách kiến trúc Roman kết hợp Gothic, nhà thờ là một trong những biểu tượng đặc trưng của Sài Gòn xưa và nay.\n\nCông trình được xây dựng vào cuối thế kỷ XIX dưới thời Pháp thuộc, phục vụ nhu cầu sinh hoạt tôn giáo của cộng đồng Công giáo tại Sài Gòn. Nhiều vật liệu xây dựng quan trọng được đưa từ Pháp sang, góp phần tạo nên vẻ đẹp cổ kính và bền vững cho công trình.\n\nNhà thờ Đức Bà không chỉ là nơi sinh hoạt tôn giáo mà còn là điểm tham quan văn hóa, kiến trúc được nhiều du khách yêu thích. Khu vực xung quanh nhà thờ có không gian thoáng, gần Bưu điện Thành phố, đường sách Nguyễn Văn Bình và nhiều công trình kiến trúc Pháp cổ khác.\n\nNgày nay, dù có thời điểm công trình được trùng tu, Nhà thờ Đức Bà vẫn là địa điểm thu hút du khách bởi giá trị lịch sử, kiến trúc và vị trí trung tâm. Đây là nơi phù hợp để chụp ảnh, tìm hiểu dấu ấn kiến trúc Pháp tại Sài Gòn và kết hợp tham quan các điểm nổi bật của Quận 1.",
     "opening_hours": "Theo thời gian tham quan và sinh hoạt tôn giáo",
     "ticket_price": "Miễn phí hoặc theo quy định khu vực tham quan",
     "best_time": "Buổi sáng hoặc cuối chiều khi ánh sáng mềm và khu vực dễ chụp ảnh.",
@@ -301,6 +357,13 @@
     ],
     "video_url": "videos/nha_tho_duc_ba.mp4",
     "thumbnail_url": "images/nha_tho_duc_ba.jpg",
+    "gallery": [
+       "images/nha_tho_duc_ba1.jpg",
+       "images/nha_tho_duc_ba2.jpg",
+       "images/nha_tho_duc_ba3.jpg",
+       "images/nha_tho_duc_ba4.jpg",
+       "images/nha_tho_duc_ba5.jpg"
+    ],
     "related_locations": [
       "cho_ben_thanh",
       "dinh_doc_lap"
@@ -312,7 +375,7 @@
     "location_name": "Dinh Độc Lập",
     "province": "TP. Hồ Chí Minh",
     "address": "Quận 1, TP. Hồ Chí Minh",
-    "description": "Dinh Độc Lập là di tích lịch sử quan trọng, gắn liền với nhiều dấu mốc lớn trong lịch sử Việt Nam hiện đại.",
+    "description": "Dinh Độc Lập, còn được gọi là Hội trường Thống Nhất, là một công trình lịch sử quan trọng nằm tại trung tâm Thành phố Hồ Chí Minh. Đây là địa điểm gắn liền với nhiều sự kiện lớn trong lịch sử hiện đại Việt Nam, đặc biệt là thời điểm kết thúc chiến tranh và thống nhất đất nước vào năm 1975.\n\nCông trình hiện nay được xây dựng trên nền dinh Norodom cũ và mang phong cách kiến trúc hiện đại kết hợp với yếu tố truyền thống phương Đông. Bên trong dinh có nhiều không gian chức năng như phòng khánh tiết, phòng họp, phòng làm việc, khu sinh hoạt và hệ thống hầm chỉ huy.\n\nDinh Độc Lập không chỉ có giá trị về kiến trúc mà còn là nơi lưu giữ nhiều hiện vật, hình ảnh và câu chuyện lịch sử. Khi tham quan, du khách có thể hình dung rõ hơn về bối cảnh chính trị, quân sự và đời sống trong một giai đoạn quan trọng của đất nước.\n\nNgày nay, Dinh Độc Lập là điểm tham quan nổi bật dành cho những ai yêu thích lịch sử, kiến trúc và văn hóa. Không gian rộng rãi, nhiều cây xanh và vị trí gần các điểm du lịch trung tâm như Nhà thờ Đức Bà, Bưu điện Thành phố và đường Đồng Khởi giúp du khách dễ dàng kết hợp trong cùng một lịch trình.",
     "opening_hours": "Theo giờ tham quan",
     "ticket_price": "Có thu phí",
     "best_time": "Buổi sáng trong tuần để tham quan các phòng trưng bày thoải mái.",
@@ -331,6 +394,13 @@
     ],
     "video_url": "videos/dinh_doc_lap.mp4",
     "thumbnail_url": "images/dinh_doc_lap.jpg",
+    "gallery": [
+       "images/dinh_doc_lap1.jpg",
+       "images/dinh_doc_lap2.jpg",
+       "images/dinh_doc_lap3.jpg",
+       "images/dinh_doc_lap4.jpg",
+       "images/dinh_doc_lap5.jpg"
+    ],
     "related_locations": [
       "nha_tho_duc_ba",
       "cho_ben_thanh"
@@ -342,7 +412,7 @@
     "location_name": "Landmark 81",
     "province": "TP. Hồ Chí Minh",
     "address": "Quận Bình Thạnh, TP. Hồ Chí Minh",
-    "description": "Landmark 81 là tòa nhà cao tầng nổi bật, đại diện cho hình ảnh hiện đại và phát triển của TP. Hồ Chí Minh.",
+    "description": "Landmark 81 là tòa nhà chọc trời nổi tiếng nằm trong khu đô thị Vinhomes Central Park, Thành phố Hồ Chí Minh. Với chiều cao nổi bật, công trình này được xem là một trong những biểu tượng hiện đại của thành phố, thể hiện tốc độ phát triển mạnh mẽ của đô thị Sài Gòn trong thời kỳ mới.\n\nTên gọi Landmark 81 xuất phát từ số tầng của tòa nhà. Công trình được thiết kế với hình dáng vươn cao, lấy cảm hứng từ bó tre truyền thống, biểu tượng cho sự đoàn kết, bền vững và phát triển. Kiến trúc hiện đại kết hợp với ý nghĩa văn hóa đã giúp tòa nhà trở thành điểm nhấn nổi bật trên đường chân trời Thành phố Hồ Chí Minh.\n\nBên trong Landmark 81 có nhiều khu vực phục vụ du khách như trung tâm thương mại, nhà hàng, quán cà phê, khách sạn, khu vui chơi và đài quan sát. Từ các tầng cao, du khách có thể ngắm nhìn toàn cảnh sông Sài Gòn, khu trung tâm thành phố và các khu đô thị xung quanh.\n\nLandmark 81 phù hợp với du khách yêu thích không gian hiện đại, mua sắm, ẩm thực và ngắm cảnh thành phố từ trên cao. Đây cũng là địa điểm lý tưởng để chụp ảnh, vui chơi cuối tuần và kết hợp tham quan công viên ven sông trong cùng khu vực.",
     "opening_hours": "Theo khu vực dịch vụ",
     "ticket_price": "Tùy khu vực tham quan",
     "best_time": "Chiều muộn đến tối để ngắm thành phố lên đèn.",
@@ -361,6 +431,13 @@
     ],
     "video_url": "videos/landmark_81.mp4",
     "thumbnail_url": "images/landmark_81.jpg",
+    "gallery": [
+       "images/landmark_811.jpg",
+       "images/landmark_812.jpg",
+       "images/landmark_813.jpg",
+       "images/landmark_814.jpg",
+       "images/landmark_815.jpg"
+    ],
     "related_locations": [
       "cho_ben_thanh",
       "dinh_doc_lap"

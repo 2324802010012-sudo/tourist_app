@@ -63,7 +63,7 @@ def load_config() -> MySQLConfig:
         host=os.getenv("MYSQL_HOST", "127.0.0.1").strip() or "127.0.0.1",
         port=int(os.getenv("MYSQL_PORT", "3306")),
         user=os.getenv("MYSQL_USER", "root").strip() or "root",
-        password=os.getenv("MYSQL_PASSWORD", ""),
+        password=os.getenv("MYSQL_PASSWORD", "123456"),
         database=database,
     )
 

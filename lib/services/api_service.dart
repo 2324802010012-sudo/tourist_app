@@ -10,7 +10,8 @@ class ApiService {
   // Đổi thành IP máy tính của bạn khi test trên điện thoại thật.
   // static const String baseUrl = 'http://10.0.2.2:8000'; // Android emulator
   // static const String baseUrl = 'http://localhost:8000'; // iOS simulator
-  static const String baseUrl = 'http://192.168.101.17:8000';
+  //static const String baseUrl = 'http://192.168.101.17:8000';
+  static const String baseUrl = 'http://192.168.1.8:8000';
   static const Duration timeout = Duration(seconds: 30);
   static const Duration jsonTimeout = Duration(seconds: 8);
 
