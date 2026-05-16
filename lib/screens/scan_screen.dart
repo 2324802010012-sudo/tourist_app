@@ -1,21 +1,22 @@
 import 'dart:io';
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../models/location_model.dart';
+import '../services/api_service.dart';
+import '../services/history_service.dart';
+import '../services/location_service.dart';
 import 'detail_screen.dart';
 import 'fail_result_screen.dart';
-import '../models/location_model.dart';
-import '../services/history_service.dart';
-import '../services/api_service.dart';
-import '../services/location_service.dart';
 
-// 🎨 THEME
-const primaryGradient = LinearGradient(
-  colors: [
-    Color.fromARGB(255, 120, 226, 138),
-    Color.fromARGB(255, 86, 167, 244),
-  ],
-);
+const _vietnamGreen = Color(0xFF1F8A56);
+const _deepGreen = Color(0xFF0E4F32);
+const _paper = Color(0xFFF7F4EA);
+const _surface = Colors.white;
+const _ink = Color(0xFF17221B);
+const _softGreen = Color(0xFFE8F2DC);
+const _goldLine = Color(0xFFEEDFB8);
+const _mutedText = Color(0xFF5E625D);
 
 class ScanScreen extends StatefulWidget {
   const ScanScreen({super.key});
@@ -33,7 +34,7 @@ class _ScanScreenState extends State<ScanScreen> {
   bool isLoading = false;
 
   final picker = ImagePicker();
-  // 📸 PICK IMAGE
+
   Future<void> pickImage(ImageSource source) async {
     try {
       final pickedFile = await picker.pickImage(
@@ -116,63 +117,41 @@ class _ScanScreenState extends State<ScanScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: _paper,
       body: Stack(
         children: [
-          // 🖼️ BACKGROUND
           Positioned.fill(
             child: Image.asset("assets/images/bg_scan.png", fit: BoxFit.cover),
           ),
-
-          // 🌫️ LÀM MỜ BACKGROUND (QUAN TRỌNG)
           Positioned.fill(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 2, sigmaY: 8),
-              child: Container(color: Colors.black.withValues(alpha: 0.25)),
-            ),
+            child: CustomPaint(painter: _ScanBackgroundPainter()),
           ),
-
-          // 📱 CONTENTS
           SafeArea(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.fromLTRB(16, 20, 16, 20),
-              child: Column(
-                children: [
-                  // 🔙 HEADER
-                  Row(
-                    children: [
-                      _glassIcon(Icons.arrow_back, () {
-                        Navigator.pop(context);
-                      }),
-                      SizedBox(width: 10),
-                      Text(
-                        "Scan",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight - 32,
+                    ),
+                    child: IntrinsicHeight(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _header(),
+                          const SizedBox(height: 34),
+                          _scanCard(),
+                          const SizedBox(height: 18),
+                          _guideCard(),
+                          const SizedBox(height: 16),
+                          _buttons(),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-
-                  SizedBox(height: _image == null ? 96 : 26),
-
-                  // 📸 SCAN CARD
-                  _scanCard(),
-
-                  SizedBox(height: _image == null ? 70 : 24),
-
-                  // 📘 GUIDE
-                  _guideCard(),
-
-                  SizedBox(height: 30),
-
-                  // 🔘 BUTTON
-                  _buttons(),
-
-                  SizedBox(height: 30),
-                ],
-              ),
+                );
+              },
             ),
           ),
         ],
@@ -180,7 +159,6 @@ class _ScanScreenState extends State<ScanScreen> {
     );
   }
 
-  // 🤖 AI
   Future<void> simulateAI() async {
     final image = _image;
     if (image == null) return;
@@ -316,114 +294,140 @@ class _ScanScreenState extends State<ScanScreen> {
     );
   }
 
-  Widget _scanCard() {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(28),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.4),
-            blurRadius: 30,
-            offset: Offset(0, 15),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(28),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 12),
-          child: Container(
-            padding: EdgeInsets.all(18),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.18), // 👈 glass rõ hơn
-              borderRadius: BorderRadius.circular(28),
-              border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
-            ),
-            child: Column(
-              children: [
-                Stack(
-                  children: [
-                    // 📸 IMAGE BOX
-                    Container(
-                      height: 180,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: const Color.fromARGB(77, 251, 250, 250),
-                        ),
-                      ),
-                      child: _image != null
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Image.file(_image!, fit: BoxFit.cover),
-                            )
-                          : _emptyView(),
-                    ),
-
-                    // 🔄 LOADING OVERLAY
-                    if (isLoading)
-                      Positioned.fill(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.5),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                CircularProgressIndicator(color: Colors.white),
-                                SizedBox(height: 10),
-                                Text(
-                                  "Đang nhận diện...",
-                                  style: TextStyle(color: Colors.white70),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
+  Widget _header() {
+    return Row(
+      children: [
+        _roundIconButton(Icons.arrow_back, () => Navigator.pop(context)),
+        const SizedBox(width: 14),
+        const Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Quét AI",
+                style: TextStyle(
+                  color: _deepGreen,
+                  fontSize: 26,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 0,
                 ),
-                if (_image != null) ...[
-                  const SizedBox(height: 12),
-                  _imageQualityStatus(),
-                ],
-              ],
-            ),
+              ),
+              SizedBox(height: 4),
+              Text(
+                "Nhận diện địa điểm",
+                style: TextStyle(
+                  color: _mutedText,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
           ),
         ),
+      ],
+    );
+  }
+
+  Widget _scanCard() {
+    return _paperCard(
+      padding: const EdgeInsets.all(14),
+      child: Column(
+        children: [
+          Stack(
+            children: [
+              Container(
+                height: 180,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFAF7EC),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: _goldLine.withValues(alpha: 0.8)),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: _image != null
+                      ? Image.file(_image!, fit: BoxFit.cover)
+                      : CustomPaint(
+                          painter: _ScanLakePainter(),
+                          child: _emptyView(),
+                        ),
+                ),
+              ),
+              const Positioned.fill(child: IgnorePointer(child: _CornerFrame())),
+              if (isLoading)
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: _deepGreen.withValues(alpha: 0.78),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: const Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CircularProgressIndicator(color: Colors.white),
+                          SizedBox(height: 12),
+                          Text(
+                            "Đang nhận diện...",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          if (_image != null) ...[
+            const SizedBox(height: 12),
+            _imageQualityStatus(),
+          ],
+        ],
       ),
     );
   }
 
   Widget _guideCard() {
-    return _glassCard(
-      child: Row(
+    return _paperCard(
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
+          Row(
+            children: [
+              const Expanded(
+                child: Text(
                   "Hướng dẫn",
                   style: TextStyle(
-                    color: const Color.fromARGB(255, 4, 4, 4),
-                    fontWeight: FontWeight.bold,
+                    color: _deepGreen,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0,
                   ),
                 ),
-                SizedBox(height: 10),
-                _guide("📸", "Chụp rõ địa điểm"),
-                _guide("🌤️", "Tránh ánh sáng xấu"),
-                _guide("📍", "Chụp toàn cảnh"),
-              ],
-            ),
+              ),
+              Icon(Icons.map_outlined, color: _vietnamGreen, size: 36),
+            ],
           ),
-          Icon(
-            Icons.map,
-            color: const Color.fromARGB(179, 18, 18, 18),
-            size: 50,
+          const SizedBox(height: 10),
+          _guide(
+            Icons.photo_camera_outlined,
+            "Chụp rõ địa điểm",
+            "Giữ máy chắc tay, lấy nét vào công trình hoặc cảnh chính.",
+          ),
+          _guide(
+            Icons.wb_sunny_outlined,
+            "Tránh ánh sáng xấu",
+            "Ưu tiên ánh sáng tự nhiên, không chụp ngược nắng hoặc quá tối.",
+          ),
+          _guide(
+            Icons.location_on_outlined,
+            "Chụp toàn cảnh",
+            "Để địa danh nằm trọn trong khung, hạn chế người hoặc vật che khuất.",
+            showDivider: false,
           ),
         ],
       ),
@@ -443,7 +447,7 @@ class _ScanScreenState extends State<ScanScreen> {
                   isLoading ? null : () => pickImage(ImageSource.camera),
                 ),
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Expanded(
                 child: _outlineButton(
                   "Ảnh khác",
@@ -453,7 +457,7 @@ class _ScanScreenState extends State<ScanScreen> {
               ),
             ],
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           _gradientButton(
             "Dùng ảnh này để nhận diện",
             Icons.auto_awesome,
@@ -474,9 +478,9 @@ class _ScanScreenState extends State<ScanScreen> {
             isLoading ? null : () => pickImage(ImageSource.camera),
           ),
         ),
-        SizedBox(width: 12),
+        const SizedBox(width: 12),
         Expanded(
-          child: _gradientButton(
+          child: _outlineButton(
             "Thư viện",
             Icons.photo,
             isLoading ? null : () => pickImage(ImageSource.gallery),
@@ -486,37 +490,48 @@ class _ScanScreenState extends State<ScanScreen> {
     );
   }
 
-  Widget _glassIcon(IconData icon, VoidCallback onTap) {
+  Widget _roundIconButton(IconData icon, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(10),
+        width: 52,
+        height: 52,
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.3),
+          color: _surface,
           shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.12),
+              blurRadius: 24,
+              offset: const Offset(0, 12),
+            ),
+          ],
         ),
-        child: Icon(icon, color: Colors.white),
+        child: Icon(icon, color: _vietnamGreen, size: 26),
       ),
     );
   }
 
   Widget _emptyView() {
-    return Column(
+    return const Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(
-          Icons.camera_alt,
-          size: 40,
-          color: const Color.fromARGB(179, 126, 224, 141),
+        _CameraSeal(),
+        SizedBox(height: 12),
+        Text(
+          "Chưa có ảnh",
+          style: TextStyle(
+            color: _deepGreen,
+            fontSize: 18,
+            fontWeight: FontWeight.w800,
+            letterSpacing: 0,
+          ),
         ),
-        SizedBox(height: 10),
-        Text("Chưa có ảnh", style: TextStyle(color: Colors.white)),
+        SizedBox(height: 4),
         Text(
           "Chụp hoặc chọn ảnh để bắt đầu",
-          style: TextStyle(
-            color: const Color.fromARGB(153, 5, 5, 5),
-            fontSize: 12,
-          ),
+          textAlign: TextAlign.center,
+          style: TextStyle(color: _mutedText, fontSize: 12),
         ),
       ],
     );
@@ -528,15 +543,16 @@ class _ScanScreenState extends State<ScanScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.9),
-        borderRadius: BorderRadius.circular(14),
+        color: _softGreen.withValues(alpha: 0.72),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: _vietnamGreen.withValues(alpha: 0.16)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(
             isValid ? Icons.verified : Icons.error_outline,
-            color: isValid ? const Color(0xFF2FAE66) : Colors.orange,
+            color: isValid ? _vietnamGreen : Colors.orange,
           ),
           const SizedBox(width: 10),
           Expanded(
@@ -544,8 +560,8 @@ class _ScanScreenState extends State<ScanScreen> {
               isValid
                   ? "Ảnh đạt kiểm tra cơ bản. Hãy xác nhận nếu ảnh đủ sáng, rõ nét và lấy trọn địa điểm."
                   : _imageValidationMessage!,
-              style: TextStyle(
-                color: isValid ? Colors.black87 : Colors.black87,
+              style: const TextStyle(
+                color: _ink,
                 height: 1.3,
                 fontWeight: FontWeight.w600,
               ),
@@ -562,39 +578,83 @@ class _ScanScreenState extends State<ScanScreen> {
     );
   }
 
-  Widget _guide(String icon, String text) {
+  Widget _guide(
+    IconData icon,
+    String title,
+    String subtitle, {
+    bool showDivider = true,
+  }) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 6),
+      padding: const EdgeInsets.only(bottom: 10),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(icon),
-          SizedBox(width: 8),
-          Text(text, style: TextStyle(color: Colors.black87)),
+          Container(
+            width: 38,
+            height: 38,
+            decoration: const BoxDecoration(
+              color: _softGreen,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: _vietnamGreen, size: 21),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: _ink,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: const TextStyle(
+                      color: _mutedText,
+                      fontSize: 12,
+                      height: 1.25,
+                    ),
+                  ),
+                  if (showDivider) ...[
+                    const SizedBox(height: 8),
+                    Divider(
+                      height: 1,
+                      color: _goldLine.withValues(alpha: 0.55),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _glassCard({required Widget child}) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Container(
-          padding: EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Colors.white.withValues(alpha: 0.25),
-                Colors.white.withValues(alpha: 0.08),
-              ],
-            ),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
+  Widget _paperCard({required Widget child, required EdgeInsets padding}) {
+    return Container(
+      width: double.infinity,
+      padding: padding,
+      decoration: BoxDecoration(
+        color: _surface.withValues(alpha: 0.82),
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.9)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 28,
+            offset: const Offset(0, 16),
           ),
-          child: child,
-        ),
+        ],
       ),
+      child: child,
     );
   }
 
@@ -603,22 +663,15 @@ class _ScanScreenState extends State<ScanScreen> {
       onTap: onTap,
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.symmetric(vertical: 16),
+        padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          gradient: onTap == null
-              ? LinearGradient(colors: [Colors.grey.shade400, Colors.grey])
-              : primaryGradient,
-          borderRadius: BorderRadius.circular(20),
+          color: onTap == null ? Colors.grey.shade400 : _vietnamGreen,
+          borderRadius: BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(
-              color: const Color.fromARGB(
-                255,
-                127,
-                222,
-                164,
-              ).withValues(alpha: 0.4),
-              blurRadius: 10,
-              offset: Offset(0, 6),
+              color: _vietnamGreen.withValues(alpha: 0.22),
+              blurRadius: 18,
+              offset: const Offset(0, 10),
             ),
           ],
         ),
@@ -626,12 +679,17 @@ class _ScanScreenState extends State<ScanScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, color: Colors.white),
-            SizedBox(width: 8),
-            Text(
-              text,
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
+            const SizedBox(width: 8),
+            Flexible(
+              child: Text(
+                text,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
               ),
             ),
           ],
@@ -643,15 +701,21 @@ class _ScanScreenState extends State<ScanScreen> {
   Widget _outlineButton(String text, IconData icon, VoidCallback? onTap) {
     return OutlinedButton.icon(
       style: OutlinedButton.styleFrom(
-        foregroundColor: Colors.white,
-        disabledForegroundColor: Colors.white54,
-        side: BorderSide(color: Colors.white.withValues(alpha: 0.65)),
+        foregroundColor: _vietnamGreen,
+        disabledForegroundColor: Colors.black38,
+        backgroundColor: Colors.white.withValues(alpha: 0.72),
+        side: BorderSide(color: _vietnamGreen.withValues(alpha: 0.65)),
         padding: const EdgeInsets.symmetric(vertical: 14),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
       onPressed: onTap,
       icon: Icon(icon),
-      label: Text(text, style: const TextStyle(fontWeight: FontWeight.bold)),
+      label: Text(
+        text,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+      ),
     );
   }
 
@@ -661,4 +725,191 @@ class _ScanScreenState extends State<ScanScreen> {
       SnackBar(content: Text(message), behavior: SnackBarBehavior.floating),
     );
   }
+}
+
+class _CameraSeal extends StatelessWidget {
+  const _CameraSeal();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        width: 64,
+        height: 64,
+      decoration: BoxDecoration(
+        color: _softGreen.withValues(alpha: 0.8),
+        shape: BoxShape.circle,
+      ),
+      child: const Icon(Icons.camera_alt, size: 34, color: _vietnamGreen),
+    );
+  }
+}
+
+class _CornerFrame extends StatelessWidget {
+  const _CornerFrame();
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(painter: _CornerFramePainter());
+  }
+}
+
+class _ScanBackgroundPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final wash = Paint()
+      ..shader = LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          _paper.withValues(alpha: 0.72),
+          _paper.withValues(alpha: 0.58),
+          _paper.withValues(alpha: 0.5),
+        ],
+      ).createShader(Offset.zero & size);
+    canvas.drawRect(Offset.zero & size, wash);
+
+    final greenPaint = Paint()..color = _vietnamGreen.withValues(alpha: 0.08);
+    canvas.drawCircle(Offset(size.width * 0.12, size.height * 0.9), 88, greenPaint);
+
+    final birdPaint = Paint()
+      ..color = const Color(0xFFB7A35E).withValues(alpha: 0.5)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.3
+      ..strokeCap = StrokeCap.round;
+    for (final bird in [
+      Offset(size.width * 0.42, 132),
+      Offset(size.width * 0.52, 146),
+      Offset(size.width * 0.57, 130),
+    ]) {
+      final path = Path()
+        ..moveTo(bird.dx - 5, bird.dy)
+        ..quadraticBezierTo(bird.dx, bird.dy - 4, bird.dx + 5, bird.dy);
+      canvas.drawPath(path, birdPaint);
+    }
+
+    final cloudPaint = Paint()
+      ..color = const Color(0xFFDCC797).withValues(alpha: 0.42)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.4;
+    final cloud = Path()
+      ..moveTo(size.width * 0.43, 88)
+      ..cubicTo(size.width * 0.48, 70, size.width * 0.52, 96, size.width * 0.56, 78)
+      ..cubicTo(size.width * 0.6, 62, size.width * 0.61, 104, size.width * 0.66, 86);
+    canvas.drawPath(cloud, cloudPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _ScanLakePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final skyPaint = Paint()
+      ..shader = const LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [Color(0xFFFFFBF0), Color(0xFFF1F5E8)],
+      ).createShader(Offset.zero & size);
+    canvas.drawRect(Offset.zero & size, skyPaint);
+
+    final mountainPaint = Paint()
+      ..color = _vietnamGreen.withValues(alpha: 0.12)
+      ..style = PaintingStyle.fill;
+    final mountains = Path()
+      ..moveTo(0, size.height * 0.56)
+      ..lineTo(size.width * 0.18, size.height * 0.34)
+      ..lineTo(size.width * 0.28, size.height * 0.49)
+      ..lineTo(size.width * 0.39, size.height * 0.3)
+      ..lineTo(size.width * 0.55, size.height * 0.55)
+      ..lineTo(size.width * 0.7, size.height * 0.38)
+      ..lineTo(size.width * 0.82, size.height * 0.54)
+      ..lineTo(size.width, size.height * 0.35)
+      ..lineTo(size.width, size.height)
+      ..lineTo(0, size.height)
+      ..close();
+    canvas.drawPath(mountains, mountainPaint);
+
+    final lakePaint = Paint()..color = Colors.white.withValues(alpha: 0.58);
+    canvas.drawRect(
+      Rect.fromLTWH(0, size.height * 0.58, size.width, size.height * 0.24),
+      lakePaint,
+    );
+
+    final pagodaPaint = Paint()..color = _deepGreen.withValues(alpha: 0.24);
+    final pagodaBase = Rect.fromLTWH(
+      size.width * 0.72,
+      size.height * 0.38,
+      size.width * 0.16,
+      size.height * 0.22,
+    );
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(pagodaBase, const Radius.circular(3)),
+      pagodaPaint,
+    );
+    canvas.drawRect(
+      Rect.fromLTWH(
+        pagodaBase.left - 8,
+        pagodaBase.top + 16,
+        pagodaBase.width + 16,
+        7,
+      ),
+      pagodaPaint,
+    );
+    canvas.drawRect(
+      Rect.fromLTWH(
+        pagodaBase.left - 12,
+        pagodaBase.top + 52,
+        pagodaBase.width + 24,
+        8,
+      ),
+      pagodaPaint,
+    );
+
+    final linePaint = Paint()
+      ..color = _goldLine.withValues(alpha: 0.36)
+      ..strokeWidth = 1;
+    for (var y = size.height * 0.62; y < size.height * 0.8; y += 18) {
+      canvas.drawLine(Offset(size.width * 0.18, y), Offset(size.width * 0.82, y), linePaint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _CornerFramePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = _goldLine.withValues(alpha: 0.8)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.2;
+    const inset = 18.0;
+    const length = 52.0;
+
+    void corner(double x, double y, bool right, bool bottom) {
+      final sx = right ? -1.0 : 1.0;
+      final sy = bottom ? -1.0 : 1.0;
+      final path = Path()
+        ..moveTo(x, y + sy * length)
+        ..lineTo(x, y)
+        ..lineTo(x + sx * length, y);
+      canvas.drawPath(path, paint);
+
+      final small = Path()
+        ..moveTo(x + sx * 12, y + sy * 38)
+        ..lineTo(x + sx * 12, y + sy * 12)
+        ..lineTo(x + sx * 38, y + sy * 12);
+      canvas.drawPath(small, paint);
+    }
+
+    corner(inset, inset, false, false);
+    corner(size.width - inset, inset, true, false);
+    corner(inset, size.height - inset, false, true);
+    corner(size.width - inset, size.height - inset, true, true);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
