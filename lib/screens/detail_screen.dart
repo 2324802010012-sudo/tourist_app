@@ -1015,9 +1015,14 @@ class _DetailScreenState extends State<DetailScreen> {
       (a, b) => _imageSortKey(a, data).compareTo(_imageSortKey(b, data)),
     );
 
+    final validAssetPaths = imageAssets.toSet();
+    final validGallery = validAssetPaths.isEmpty
+        ? data.gallery
+        : data.gallery?.where(validAssetPaths.contains);
+
     final images = <String>{
       if (data.thumbnail.isNotEmpty) data.thumbnail,
-      ...?data.gallery,
+      ...?validGallery,
       ...galleryImages,
     };
 
